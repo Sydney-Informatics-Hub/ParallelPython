@@ -1,0 +1,15 @@
+# .github/workflows/quarto-render.yml
+name: Render and deploy Quarto files
+on: 
+  push:
+  pull_request:
+
+jobs:
+  quarto-render-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "Install Quarto and render"
+      uses: pommevilla/quarto-render@v0.3.11
+

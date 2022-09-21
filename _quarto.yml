@@ -1,0 +1,31 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Sydney Informatics Hub Course name"
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+      - href: setup.html
+        text: "Setup"
+      - text: "Session 1"
+        menu:
+        - text: "Fundamentals"
+          href: notebooks/01a-fundamentals.html
+
+  body-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
+          
+format:
+  html:
+    theme: simplex
+    css: lesson.css
+    toc: true
+    code-overflow: wrap
+    highlight-style: github
+
+
+
+
