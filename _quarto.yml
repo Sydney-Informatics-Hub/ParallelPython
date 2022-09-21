@@ -14,7 +14,11 @@ website:
       - text: "Session 1"
         menu:
         - text: "Fundamentals"
-          href: notebooks/01a-fundamentals.html
+          href: notebooks/01a-pandas_fundamentals.html
+        - text: "Dask"
+          href: notebooks/01b-dask_demo.html
+        - text: "ScientificComputing"
+          href: notebooks/01c-Scientific_Computing.html
 
   body-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
           

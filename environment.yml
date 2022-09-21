@@ -1,9 +1,18 @@
-name: envname
+# conda env create -f environment.yml
+name: parallel
 channels:
   - conda-forge
   - defaults
 dependencies:
   - python=3.9
-  - matplotlib
-  - numpy
-  - jupyter
+  - numpy # scientific computing
+  - pandas # basic datastructures
+  - dask # enables parallel processing via high level pythonic syntax
+  - jupyterlab #for interactive visualisation
+  - scipy #mathematical algorithms and convenience functions built on the NumPy extension 
+  - seaborn # for charts and visuals. provides datsets to learning
+  - pip
+#  - pip:
+#    - XXX
+
+

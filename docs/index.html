@@ -2,37 +2,43 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.345">
+<meta name="generator" content="quarto-1.1.165">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Sydney Informatics Hub Course name - Course title</title>
+<title>Sydney Informatics Hub Course name - Parallel Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
 </style>
+
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link id="quarto-text-highlighting-styles" href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -63,9 +69,11 @@ ul.task-list{list-style: none;}
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <a class="navbar-brand" href="./index.html">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Sydney Informatics Hub Course name</span>
-  </a>
+    </a>
+  </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -81,8 +89,16 @@ ul.task-list{list-style: none;}
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-session-1" role="button" data-bs-toggle="dropdown" aria-expanded="false">Session 1</a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-session-1">    
         <li>
-    <a class="dropdown-item" href="./notebooks/01a-fundamentals.html">
+    <a class="dropdown-item" href="./notebooks/01a-pandas_fundamentals.html">
  <span class="dropdown-text">Fundamentals</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./notebooks/01b-dask_demo.html">
+ <span class="dropdown-text">Dask</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./notebooks/01c-Scientific_Computing.html">
+ <span class="dropdown-text">ScientificComputing</span></a>
   </li>  
     </ul>
   </li>
@@ -97,7 +113,7 @@ ul.task-list{list-style: none;}
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc">
+        <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -115,10 +131,8 @@ ul.task-list{list-style: none;}
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Course title</h1>
+<h1 class="title">Parallel Python</h1>
 </div>
-
-
 
 
 
@@ -131,18 +145,19 @@ ul.task-list{list-style: none;}
 
 </header>
 
-<p>This course is aimed at researchers, students, and industry professionals who want to learn about …</p>
+<p>This course is aimed at researchers, students, and industry professionals who want to learn intermediate python skills applied to scientific computing and data science.</p>
 <section id="trainers" class="level2">
 <h2 class="anchored" data-anchor-id="trainers">Trainers</h2>
 <ul>
+<li>Kristian Maras (Kris) (MSc Mathematics / Ba Commerce)</li>
 <li>Nathaniel (Nate) Butterworth (PhD Computational Geophysics), nathaniel.butterworth@sydney.edu.au</li>
 <li>Darya Vanichkina (PhD Bioinformatics, SFHEA)</li>
-<li>Kristian Maras (MSc Quant Fin)</li>
+<li>Tim White (PhD Physics and Astronomy)</li>
 </ul>
 </section>
 <section id="course-pre-requisites-and-setup-requirements" class="level2">
 <h2 class="anchored" data-anchor-id="course-pre-requisites-and-setup-requirements">Course pre-requisites and setup requirements</h2>
-<p>No previous programming experience is required, but <strong>Session 1 is a pre-requisite for the other sessions</strong>. Training will be delivered online, so you will need access to a modern computer with a stable internet connection and around 5GB of storage space for data downloaded prior to the course. Participants are encouraged to setup a Python environment on their local computer (as per the <a href="./setup.html">Setup Instructions</a> provided), but participation using other platforms/environments can be supported where necessary.</p>
+<p>Introductory Python experience recommended.</p>
 </section>
 <section id="venue-online-via-zoom" class="level2">
 <h2 class="anchored" data-anchor-id="venue-online-via-zoom">Venue, online via Zoom</h2>
@@ -163,18 +178,21 @@ ul.task-list{list-style: none;}
 <li>Focus on what is best for the community</li>
 <li>Show courtesy and respect towards other community members</li>
 </ul>
-<p>Our full CoC, with incident reporting guidelines, is available [here]https://sydney-informatics-hub.github.io/codeofconduct/).</p>
+<p>Our full CoC, with incident reporting guidelines, is available <a href="https://sydney-informatics-hub.github.io/codeofconduct/">here</a>.</p>
 </section>
 <section id="general-session-timings" class="level2">
 <h2 class="anchored" data-anchor-id="general-session-timings">General session timings</h2>
 <ul>
-<li>…</li>
+<li>A. Intoduction and Revise Python Data Manipulation and Pandas Data Structure</li>
+<li>B. Dask Fundamentals and application to solving data and computationally bounded bottlenecks.</li>
+<li>C. Scientific Computing Demonstration</li>
 </ul>
 </section>
 <section id="setup-instructions" class="level2">
 <h2 class="anchored" data-anchor-id="setup-instructions">Setup Instructions</h2>
-<p>Please complete the <a href="./setup.html">Setup Instructions</a> <strong>before the course</strong>.</p>
-<p>If you have any trouble, please get in contact with us ASAP.</p>
+<p>All content in this course is designed to run on the existing Dask Binder :</p>
+<p><a href="https://examples.dask.org/">Dask Binder</a></p>
+<p>Hence no installation steps are needed prior to the course.</p>
 
 
 </section>
@@ -182,6 +200,24 @@ ul.task-list{list-style: none;}
 <p>All materials copyright Sydney Informatics Hub, University of Sydney</p></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -231,7 +267,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

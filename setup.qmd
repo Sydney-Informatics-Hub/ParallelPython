@@ -7,6 +7,6 @@ output:
 ---
 
 
-# 1. Get a client
+# 1. Connect to Wifi
 
-These are the setup instructions...
+# 2. Go to [Dask Binder](https://examples.dask.org/)

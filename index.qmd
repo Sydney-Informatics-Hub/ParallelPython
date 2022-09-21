@@ -1,5 +1,5 @@
 ---
-title: "Course title"
+title: "Parallel Python"
 output:
   html_document:
     toc: false
@@ -7,19 +7,20 @@ output:
 ---
 
 
-This course is aimed at researchers, students, and industry professionals who want to learn about ...
+This course is aimed at researchers, students, and industry professionals who want to learn intermediate python skills applied to scientific computing and data science.
 
 
 ## Trainers
-
+* Kristian Maras (Kris) (MSc Mathematics / Ba Commerce)
 * Nathaniel (Nate) Butterworth (PhD Computational Geophysics), nathaniel.butterworth@sydney.edu.au
 * Darya Vanichkina (PhD Bioinformatics, SFHEA)
-* Kristian Maras (MSc Quant Fin)
+* Tim White (PhD Physics and Astronomy)
+
 
 
 ## Course pre-requisites and setup requirements
 
-No previous programming experience is required, but **Session 1 is a pre-requisite for the other sessions**. Training will be delivered online, so you will need access to a modern computer with a stable internet connection and around 5GB of storage space for data downloaded prior to the course. Participants are encouraged to setup a Python environment on their local computer (as per the [Setup Instructions](./setup.html) provided), but participation using other platforms/environments can be supported where necessary.
+Introductory Python experience recommended. 
 
 
 
@@ -43,17 +44,22 @@ In order to foster a positive and professional learning environment we encourage
 * Focus on what is best for the community
 * Show courtesy and respect towards other community members
 
-Our full CoC, with incident reporting guidelines, is available [here]https://sydney-informatics-hub.github.io/codeofconduct/).
+Our full CoC, with incident reporting guidelines, is available [here](https://sydney-informatics-hub.github.io/codeofconduct/).
 
 
 
 ## General session timings
 
-* ...
+* A. Intoduction and Revise Python Data Manipulation and Pandas Data Structure
+* B. Dask Fundamentals and application to solving data and computationally bounded bottlenecks.
+* C. Scientific Computing Demonstration 
 
 
 ## Setup Instructions
 
-Please complete the [Setup Instructions](./setup.html) **before the course**.
+All content in this course is designed to run on the existing Dask Binder : 
 
-If you have any trouble, please get in contact with us ASAP.
+[Dask Binder](https://examples.dask.org/)
+
+Hence no installation steps are needed prior to the course.
+
