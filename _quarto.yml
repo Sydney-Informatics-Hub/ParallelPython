@@ -1,9 +1,17 @@
 project:
   type: website
   output-dir: docs
+editor:
+  render-on-save: true
+execute:
+  freeze: auto  # re-render only when source changes  
+
 
 website:
   title: "Sydney Informatics Hub Course name"
+  site-url: https://sydney-informatics-hub.github.io/ParallelPython
+  repo-url: https://github.com/Sydney-Informatics-Hub/ParallelPython
+  repo-actions: [issue]
   navbar:
     background: primary
     left:
