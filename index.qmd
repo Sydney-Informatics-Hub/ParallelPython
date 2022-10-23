@@ -17,20 +17,9 @@ This course is aimed at researchers, students, and industry professionals who wa
 * Tim White (PhD Physics and Astronomy)
 
 
-
 ## Course pre-requisites and setup requirements
 
 Introductory Python experience recommended. 
-
-
-
-
-## Venue, online via Zoom
-Participants will be provided with a Zoom link. Trainers will be broadcasting from Sydney.
-
-#### Zoom etiquette and how we interact
-
-Sessions will be recorded for attendees only, and it is set up to only record the host shared screen and host audio. We will try and get these uploaded to this site as soon as possible. Please interrupt whenever you want! Ideally, have your camera on and interact as much as possible. There will be someone monitoring the chat-window with any questions you would like to post there.  Four hours is a long Zoom session so we have plenty of scheduled breaks combined with a mix of content to be delivered as demos, plus sections as independent exercises, but most of the course will be pretty-hands on with everyone writing their own code. We will use Zoom break-out rooms as needed with the Trainers and participants.
 
 
 ## Code of Conduct
@@ -45,7 +34,6 @@ In order to foster a positive and professional learning environment we encourage
 * Show courtesy and respect towards other community members
 
 Our full CoC, with incident reporting guidelines, is available [here](https://sydney-informatics-hub.github.io/codeofconduct/).
-
 
 
 ## General session timings
