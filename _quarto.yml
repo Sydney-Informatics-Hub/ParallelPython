@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Sydney Informatics Hub Course name"
+  title: "Parallel Python"
   navbar:
     background: primary
     left:
@@ -16,7 +16,7 @@ website:
         - text: "Fundamentals"
           href: notebooks/01a-pandas_fundamentals.html
         - text: "Dask"
-          href: notebooks/01b-dask_demo.html
+          href: notebooks/01b-TransitionToDask.html
         - text: "ScientificComputing"
           href: notebooks/01c-Scientific_Computing.html
 
