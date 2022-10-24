@@ -7,6 +7,33 @@ output:
 ---
 
 
-# 1. Connect to Wifi
+# Go to [Dask Binder](https://examples.dask.org/)
 
-# 2. Go to [Dask Binder](https://examples.dask.org/)
+Launch the Binder instance at the [Dask Example Page](https://examples.dask.org/) and go from there!
+
+Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.
+
+
+# At home setup
+
+To complete the exercises presented in the workshop, you may create a Python environment with the following packages:
+
+```
+conda create -n quantum python=3.9 numpy scipy pandas scikit-learn seaborn dask jupyterlab -c conda-forge
+```
+
+At the time of this workshop, the major package versions were:
+
+```
+dask=2022.10.0
+jupyterlab=3.4.8
+matplotlib-base=3.5.3
+numpy=1.23.4
+pandas=1.5.1
+python=3.9.13
+scikit-learn=1.1.2
+scipy=1.9.3
+seaborn=0.12.1
+```
+
+Other combinations may also work.

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Sydney Informatics Hub Course name - Setup</title>
+<title>Parallel Python - Setup</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Sydney Informatics Hub Course name</span>
+    <span class="navbar-title">Parallel Python</span>
     </a>
   </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -93,7 +93,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Fundamentals</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./notebooks/01b-dask_demo.html">
+    <a class="dropdown-item" href="./notebooks/01b-TransitionToDask.html">
  <span class="dropdown-text">Dask</span></a>
   </li>  
         <li>
@@ -117,8 +117,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#connect-to-wifi" id="toc-connect-to-wifi" class="nav-link active" data-scroll-target="#connect-to-wifi">1. Connect to Wifi</a></li>
-  <li><a href="#go-to-dask-binder" id="toc-go-to-dask-binder" class="nav-link" data-scroll-target="#go-to-dask-binder">2. Go to Dask Binder</a></li>
+  <li><a href="#go-to-dask-binder" id="toc-go-to-dask-binder" class="nav-link active" data-scroll-target="#go-to-dask-binder">Go to Dask Binder</a></li>
+  <li><a href="#at-home-setup" id="toc-at-home-setup" class="nav-link" data-scroll-target="#at-home-setup">At home setup</a></li>
   </ul>
 </nav>
     </div>
@@ -141,11 +141,26 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="connect-to-wifi" class="level1">
-<h1>1. Connect to Wifi</h1>
-</section>
 <section id="go-to-dask-binder" class="level1">
-<h1>2. Go to <a href="https://examples.dask.org/">Dask Binder</a></h1>
+<h1>Go to <a href="https://examples.dask.org/">Dask Binder</a></h1>
+<p>Launch the Binder instance at the <a href="https://examples.dask.org/">Dask Example Page</a> and go from there!</p>
+<p>Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.</p>
+</section>
+<section id="at-home-setup" class="level1">
+<h1>At home setup</h1>
+<p>To complete the exercises presented in the workshop, you may create a Python environment with the following packages:</p>
+<pre><code>conda create -n quantum python=3.9 numpy scipy pandas scikit-learn seaborn dask jupyterlab -c conda-forge</code></pre>
+<p>At the time of this workshop, the major package versions were:</p>
+<pre><code>dask=2022.10.0
+jupyterlab=3.4.8
+matplotlib-base=3.5.3
+numpy=1.23.4
+pandas=1.5.1
+python=3.9.13
+scikit-learn=1.1.2
+scipy=1.9.3
+seaborn=0.12.1</code></pre>
+<p>Other combinations may also work.</p>
 
 
 </section>

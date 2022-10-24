@@ -243,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="transitioning-to-dask-dataframes" class="level2">
 <h2 class="anchored" data-anchor-id="transitioning-to-dask-dataframes">Transitioning to Dask DataFrames</h2>
-<div class="cell" data-execution_count="2">
+<div class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load ddf from existing df</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> dd.from_pandas(df,npartitions <span class="op">=</span> <span class="dv">2</span>) </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#many loading options available</span></span>
@@ -266,7 +266,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># If your returned object is larger than this, you can increase the number of output partitions using the split_out argument.</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>ddf.groupby(<span class="st">'cut'</span>).mean() <span class="co">#npartitains=1</span></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>ddf.groupby(<span class="st">'cut'</span>).mean(split_out<span class="op">=</span><span class="dv">2</span>) <span class="co">#npartitains=2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="19">
 
 <div><strong>Dask DataFrame Structure:</strong></div>
 <div>
@@ -328,10 +328,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </tbody>
 </table>
 </div>
-<div>Dask Name: truediv, 9 graph layers</div>
+<div>Dask Name: truediv, 19 graph layers</div>
 </div>
 </div>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dask syntax intentionally mimics most well knows pandas apis</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ddf.loc[<span class="dv">15</span>:<span class="dv">20</span>] <span class="co"># subset rows</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ddf[[<span class="st">"carat"</span>,<span class="st">"price"</span>]] <span class="co">#subset columns</span></span>
@@ -359,7 +359,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#ddf.filter(['carat','price'])  #not available</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#https://docs.dask.org/en/stable/dataframe-api.html</span></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="20">
 
 <div>
 
@@ -456,7 +456,7 @@ Solution
 <p>Persist intelligently: If you have the available RAM for your dataset then you can persist data in memory. On distributed systems, it is a way of telling the cluster that it should start executing the computations that you have defined so far, and that it should try to keep those results in memory. - df = df.persist()</p>
 <p>Repartition to reduce overhead. As you reduce or increase the size of your pandas DataFrames by filtering or joining, it may be wise to reconsider how many partitions you need. Adjust partitians accordingly using repartition. - df = df.repartition(npartitions=df.npartitions // 100)</p>
 <p>Consider storing large data in Apache Parquet Format (binary column based format)</p>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Time series data with every second observations from year 2000</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ts_data </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -481,7 +481,7 @@ Solution
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Continue with pandas if memory is fine</span></span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ts_subset_df <span class="op">=</span> ts_subset.compute()</span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>ts_subset_df.sort_values(<span class="st">"name"</span>).head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="28">
 
 <div>
 
@@ -501,18 +501,18 @@ Solution
   <tbody>
     <tr>
       <th>Alice</th>
-      <td>222.172615</td>
-      <td>0.999890</td>
+      <td>-76.577676</td>
+      <td>0.999903</td>
     </tr>
     <tr>
       <th>Bob</th>
-      <td>-128.031103</td>
-      <td>0.999995</td>
+      <td>68.025989</td>
+      <td>0.999999</td>
     </tr>
     <tr>
       <th>Charlie</th>
-      <td>-194.287971</td>
-      <td>0.999982</td>
+      <td>150.461159</td>
+      <td>0.999970</td>
     </tr>
   </tbody>
 </table>
@@ -522,7 +522,7 @@ Solution
 </section>
 <section id="using-external-functions-in-dask" class="level2">
 <h2 class="anchored" data-anchor-id="using-external-functions-in-dask">Using external functions in Dask</h2>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(partition):</span>
@@ -542,7 +542,7 @@ Solution
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>).compute()</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"Bob"</span>] <span class="co">#linear model of a particular group</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="29">
 <style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
 </div>
 </div>
@@ -553,11 +553,11 @@ Solution
 </section>
 <section id="dask-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="dask-arrays">Dask Arrays</h2>
-<div class="cell" data-execution_count="7">
+<div class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="30">
 
 <table>
     <tbody><tr>
@@ -637,13 +637,13 @@ Solution
 </tbody></table>
 </div>
 </div>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#numpy syntax as usual</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> x.T</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> y[::<span class="dv">2</span>, <span class="dv">5000</span>:].mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="co"># axis 0 is index, axis 1 is columns</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>z</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Trigger compute and investigate Client</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="31">
 
 <table>
     <tbody><tr>
@@ -732,25 +732,18 @@ Solution
 <p>Green Saturated: It has enough work to stay busy.</p>
 <p>Red Idle: Does not have enough work to stay busy.</p>
 <p>Task Stream: Individual task across threads. - White colour represent deadtime.</p>
-<div class="cell" data-execution_count="9">
+<div class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To load diagnostic in web browser on local</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> Client</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> Client()</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>client <span class="co">#client.shutdown after use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>2022-10-19 15:47:04,025 - distributed.diskutils - INFO - Found stale lock file and directory '/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-d50xrk9r', purging
-2022-10-19 15:47:04,025 - distributed.diskutils - INFO - Found stale lock file and directory '/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-bbzz7j2b', purging
-2022-10-19 15:47:04,026 - distributed.diskutils - INFO - Found stale lock file and directory '/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-dckulq54', purging
-2022-10-19 15:47:04,026 - distributed.diskutils - INFO - Found stale lock file and directory '/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-w6xsc0dm', purging
-2022-10-19 15:47:04,026 - distributed.diskutils - INFO - Found stale lock file and directory '/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-8_2qiypk', purging</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="32">
 
 <div>
     <div style="width: 24px; height: 24px; background-color: #e1e1e1; border: 3px solid #9D9D9D; border-radius: 5px; position: absolute;"> </div>
     <div style="margin-left: 48px;">
         <h3 style="margin-bottom: 0px;" class="anchored">Client</h3>
-        <p style="color: #9D9D9D; margin-bottom: 0px;">Client-138b9b00-4f69-11ed-b0b4-d687d7367289</p>
+        <p style="color: #9D9D9D; margin-bottom: 0px;">Client-fddb0738-533b-11ed-8830-b469212762d9</p>
         <table style="width: 100%; text-align: left;">
 
         <tbody><tr>
@@ -779,22 +772,22 @@ Solution
     </div>
     <div style="margin-left: 48px;">
         <h3 style="margin-bottom: 0px; margin-top: 0px;" class="anchored">LocalCluster</h3>
-        <p style="color: #9D9D9D; margin-bottom: 0px;">570887fc</p>
+        <p style="color: #9D9D9D; margin-bottom: 0px;">b7149360</p>
         <table style="width: 100%; text-align: left;">
             <tbody><tr>
                 <td style="text-align: left;">
                     <strong>Dashboard:</strong> <a href="http://127.0.0.1:8787/status" target="_blank">http://127.0.0.1:8787/status</a>
                 </td>
                 <td style="text-align: left;">
-                    <strong>Workers:</strong> 5
+                    <strong>Workers:</strong> 4
                 </td>
             </tr>
             <tr>
                 <td style="text-align: left;">
-                    <strong>Total threads:</strong> 10
+                    <strong>Total threads:</strong> 8
                 </td>
                 <td style="text-align: left;">
-                    <strong>Total memory:</strong> 32.00 GiB
+                    <strong>Total memory:</strong> 31.86 GiB
                 </td>
             </tr>
             
@@ -816,14 +809,14 @@ Solution
         <div style="width: 24px; height: 24px; background-color: #FFF7E5; border: 3px solid #FF6132; border-radius: 5px; position: absolute;"> </div>
         <div style="margin-left: 48px;">
             <h3 style="margin-bottom: 0px;" class="anchored">Scheduler</h3>
-            <p style="color: #9D9D9D; margin-bottom: 0px;">Scheduler-da8237b7-4fac-43f9-b5d0-7fb607f2165a</p>
+            <p style="color: #9D9D9D; margin-bottom: 0px;">Scheduler-39946b8c-a667-4260-936e-09e59ef3ac13</p>
             <table style="width: 100%; text-align: left;">
                 <tbody><tr>
                     <td style="text-align: left;">
-                        <strong>Comm:</strong> tcp://127.0.0.1:55411
+                        <strong>Comm:</strong> tcp://127.0.0.1:64856
                     </td>
                     <td style="text-align: left;">
-                        <strong>Workers:</strong> 5
+                        <strong>Workers:</strong> 4
                     </td>
                 </tr>
                 <tr>
@@ -831,7 +824,7 @@ Solution
                         <strong>Dashboard:</strong> <a href="http://127.0.0.1:8787/status" target="_blank">http://127.0.0.1:8787/status</a>
                     </td>
                     <td style="text-align: left;">
-                        <strong>Total threads:</strong> 10
+                        <strong>Total threads:</strong> 8
                     </td>
                 </tr>
                 <tr>
@@ -839,7 +832,7 @@ Solution
                         <strong>Started:</strong> Just now
                     </td>
                     <td style="text-align: left;">
-                        <strong>Total memory:</strong> 32.00 GiB
+                        <strong>Total memory:</strong> 31.86 GiB
                     </td>
                 </tr>
             </tbody></table>
@@ -862,7 +855,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:55441
+                            <strong>Comm: </strong> tcp://127.0.0.1:64890
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -870,21 +863,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:55442/status" target="_blank">http://127.0.0.1:55442/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64891/status" target="_blank">http://127.0.0.1:64891/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 6.40 GiB
+                            <strong>Memory: </strong> 7.97 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:55418
+                            <strong>Nanny: </strong> tcp://127.0.0.1:64860
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-g0lpftv2
+                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-82k95ncc
                         </td>
                     </tr>
 
@@ -907,7 +900,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:55429
+                            <strong>Comm: </strong> tcp://127.0.0.1:64893
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -915,21 +908,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:55430/status" target="_blank">http://127.0.0.1:55430/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64895/status" target="_blank">http://127.0.0.1:64895/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 6.40 GiB
+                            <strong>Memory: </strong> 7.97 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:55414
+                            <strong>Nanny: </strong> tcp://127.0.0.1:64861
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-rwe9xunc
+                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-qjwnr0_y
                         </td>
                     </tr>
 
@@ -952,7 +945,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:55435
+                            <strong>Comm: </strong> tcp://127.0.0.1:64887
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -960,21 +953,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:55436/status" target="_blank">http://127.0.0.1:55436/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64888/status" target="_blank">http://127.0.0.1:64888/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 6.40 GiB
+                            <strong>Memory: </strong> 7.97 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:55417
+                            <strong>Nanny: </strong> tcp://127.0.0.1:64862
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-ku8gd_ny
+                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-k00spw3h
                         </td>
                     </tr>
 
@@ -997,7 +990,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:55438
+                            <strong>Comm: </strong> tcp://127.0.0.1:64894
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -1005,66 +998,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:55439/status" target="_blank">http://127.0.0.1:55439/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64896/status" target="_blank">http://127.0.0.1:64896/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 6.40 GiB
+                            <strong>Memory: </strong> 7.97 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:55416
+                            <strong>Nanny: </strong> tcp://127.0.0.1:64859
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-ir6brn7j
-                        </td>
-                    </tr>
-
-                    
-
-                    
-
-                </tbody></table>
-            </details>
-            </div>
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-            <div style="width: 24px; height: 24px; background-color: #DBF5FF; border: 3px solid #4CC9FF; border-radius: 5px; position: absolute;"> </div>
-            <div style="margin-left: 48px;">
-            <details>
-                <summary>
-                    <h4 style="margin-bottom: 0px; display: inline;" class="anchored">Worker: 4</h4>
-                </summary>
-                <table style="width: 100%; text-align: left;">
-                    <tbody><tr>
-                        <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:55431
-                        </td>
-                        <td style="text-align: left;">
-                            <strong>Total threads: </strong> 2
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:55433/status" target="_blank">http://127.0.0.1:55433/status</a>
-                        </td>
-                        <td style="text-align: left;">
-                            <strong>Memory: </strong> 6.40 GiB
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:55415
-                        </td>
-                        <td style="text-align: left;"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-worker-space/worker-p6ok6r_4
+                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-0uhuqhig
                         </td>
                     </tr>
 
@@ -1091,25 +1039,18 @@ Solution
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Example of efficient resource utilisation</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (da.arcsin(x) <span class="op">+</span> da.arcsin(y)).<span class="bu">sum</span>(axis <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>z.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>array([113921.19554912, 114000.98433508, 113924.20255257, ...,
-       114144.18495407, 114108.92219499, 113948.54013927])</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Example of efficient resource utilisation</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (da.arcsin(x) <span class="op">+</span> da.arcsin(y)).<span class="bu">sum</span>(axis <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>z.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inefficient resource utilisation - dask introduces too much overhead for simple sizes np handles well</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000_000</span>),chunks <span class="op">=</span> (<span class="dv">1000</span>,))</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>x.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>4998308.180031672</code></pre>
-</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inefficient resource utilisation - dask introduces too much overhead for simple sizes np handles well</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000_000</span>),chunks <span class="op">=</span> (<span class="dv">1000</span>,))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="key-points" class="level3 keypoints">
 <h3 class="anchored" data-anchor-id="key-points">Key points</h3>
