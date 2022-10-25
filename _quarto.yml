@@ -18,7 +18,7 @@ website:
         - text: "Dask"
           href: notebooks/01b-TransitionToDask.html
         - text: "ScientificComputing"
-          href: notebooks/01c-Scientific_Computing.html
+          href: notebooks/01c-scientific_computing.html
 
   body-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
           
