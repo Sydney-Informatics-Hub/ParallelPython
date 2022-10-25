@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Parallel Python"
+  title: "Parallel Python with Dask"
   navbar:
     background: primary
     left:
@@ -11,16 +11,17 @@ website:
         text: Home
       - href: setup.html
         text: "Setup"
-      - text: "Session 1"
+      - text: "Sessions"
         menu:
         - text: "Fundamentals"
           href: notebooks/01a-pandas_fundamentals.html
         - text: "Dask"
           href: notebooks/01b-TransitionToDask.html
-        - text: "ScientificComputing"
-          href: notebooks/01c-Scientific_Computing.html
+        - text: "Scientific Computing"
+          href: notebooks/01c-scientific_computing.html
+        - text: "Dask Delayed"
+          href: notebooks/01d-dask_delayed.html
 
-  body-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
           
 format:
   html:
