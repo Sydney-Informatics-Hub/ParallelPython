@@ -225,7 +225,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The designers of the Python language made the choice that only one thread in a process can run actual Python code by using the so-called global interpreter lock (GIL).</p>
 <p>External libraries (NumPy, SciPy, Pandas, etc), written in C or other languages, can release the lock and run multi-threaded. Code writen in native Python has the GIL limitation.</p>
 <p>The <strong><em>multiprocessing library</em></strong> can be used to release the GIL on native Python code.</p>
-<div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.distributed <span class="im">as</span> dd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
@@ -250,49 +249,362 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using apply from pandas</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ps <span class="op">=</span> pd.Series([<span class="dv">10</span><span class="op">**</span><span class="dv">5</span>,<span class="dv">20</span><span class="op">**</span><span class="dv">5</span>])</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ps.<span class="bu">apply</span>(sample)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>0    3.143000
-1    3.141715
+<pre><code>0    3.13884
+1    3.14272
 dtype: float64</code></pre>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a pool object from with a with statement </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> Pool() <span class="im">as</span> p:</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> p.<span class="bu">map</span>(sample,ps)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># will engage p.close() automatically</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Process SpawnPoolWorker-1:
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 367, in get
+    return _ForkingPickler.loads(res)
+AttributeError: Can't get attribute 'sample' on &lt;module '__main__' (built-in)&gt;
+Process SpawnPoolWorker-2:
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 367, in get
+    return _ForkingPickler.loads(res)
+AttributeError: Can't get attribute 'sample' on &lt;module '__main__' (built-in)&gt;
+Process SpawnPoolWorker-10:
+Process SpawnPoolWorker-8:
+Process SpawnPoolWorker-11:
+Process SpawnPoolWorker-9:
+Process SpawnPoolWorker-3:
+Process SpawnPoolWorker-7:
+Process SpawnPoolWorker-4:
+Process SpawnPoolWorker-12:
+Process SpawnPoolWorker-6:
+Process SpawnPoolWorker-5:
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+KeyboardInterrupt
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+KeyboardInterrupt
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+Traceback (most recent call last):
+KeyboardInterrupt
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 365, in get
+    res = self._reader.recv_bytes()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/connection.py", line 221, in recv_bytes
+    buf = self._recv_bytes(maxlength)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/connection.py", line 419, in _recv_bytes
+    buf = self._recv(4)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/connection.py", line 384, in _recv
+    chunk = read(handle, remaining)
+KeyboardInterrupt
+KeyboardInterrupt
+KeyboardInterrupt
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt</code></pre>
+<pre><code>KeyboardInterrupt: </code></pre>
 <p>Multiprocessing introduces an initial fixed cost in time (creating Pool objects). Knowing what hardware you are working on is needed to tailor the number of processes created with what is available. There is a risk of creating too many processes which make the initial fixed cost excessively large.</p>
 </section>
 <section id="we-will-come-back-to-the-below-alternative-dask-afterwards" class="level3">
-<h3 class="anchored" data-anchor-id="we-will-come-back-to-the-below-alternative-dask-afterwards">We will come back to the below alternative (Dask) Afterwards</h3>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the dask equivalent input</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> dd.from_pandas(ps,npartitions <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit <span class="co">#605 ms ± 10.9 ms per loop</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> ds.<span class="bu">apply</span>(sample,meta<span class="op">=</span>(<span class="st">'x'</span>, <span class="st">'float64'</span>)).mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>605 ms ± 10.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</p>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit <span class="co"># 1.08 s ± 47.8 ms per loop</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> Pool()</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> p.<span class="bu">map</span>(sample,ps)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>p.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 class="anchored" data-anchor-id="we-will-come-back-to-the-below-alternative-dask-afterwards">We will come back to the below alternative (Dask) afterwards</h3>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the dask equivalent input</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> dd.from_pandas(ps,npartitions <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit <span class="co">#605 ms ± 10.9 ms per loop</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> ds.<span class="bu">apply</span>(sample,meta<span class="op">=</span>(<span class="st">'x'</span>, <span class="st">'float64'</span>)).mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>894 ms ± 9.68 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</p>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit <span class="co"># 1.08 s ± 47.8 ms per loop</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> Pool()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> p.<span class="bu">map</span>(sample,ps)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>p.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Process SpawnPoolWorker-13:
+Process SpawnPoolWorker-14:
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 367, in get
+    return _ForkingPickler.loads(res)
+AttributeError: Can't get attribute 'sample' on &lt;module '__main__' (built-in)&gt;
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 367, in get
+    return _ForkingPickler.loads(res)
+AttributeError: Can't get attribute 'sample' on &lt;module '__main__' (built-in)&gt;
+Process SpawnPoolWorker-20:
+Process SpawnPoolWorker-24:
+Process SpawnPoolWorker-21:
+Process SpawnPoolWorker-23:
+Process SpawnPoolWorker-16:
+Process SpawnPoolWorker-22:
+Process SpawnPoolWorker-17:
+Traceback (most recent call last):
+Process SpawnPoolWorker-19:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt
+Process SpawnPoolWorker-15:
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+KeyboardInterrupt
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+Process SpawnPoolWorker-18:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+Traceback (most recent call last):
+KeyboardInterrupt
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 365, in get
+    res = self._reader.recv_bytes()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/connection.py", line 221, in recv_bytes
+    buf = self._recv_bytes(maxlength)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/connection.py", line 419, in _recv_bytes
+    buf = self._recv(4)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/connection.py", line 384, in _recv
+    chunk = read(handle, remaining)
+KeyboardInterrupt
+KeyboardInterrupt
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/pool.py", line 114, in worker
+    task = get()
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/queues.py", line 364, in get
+    with self._rlock:
+  File "/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/multiprocessing/synchronize.py", line 95, in __enter__
+    return self._semlock.__enter__()
+KeyboardInterrupt</code></pre>
+<pre><code>KeyboardInterrupt: </code></pre>
 </section>
 <section id="compare-multiprocessing-to-dask" class="level3">
 <h3 class="anchored" data-anchor-id="compare-multiprocessing-to-dask">Compare Multiprocessing to Dask</h3>
 <p>Dask uses multiprocessing by default to overcome the GIL. Hence comparing the run time of the multiprocessing library to Dask with a function-bound problem will yield similar results.</p>
-<p>Yet dask offers an ecosystem of resource management (Scheduler, diagnostics, data partitions and Task Graphs) that make it a more attractive way to achieve the same thing in most cases. Resource management is handles automatically by the sceduler.</p>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for reference, delaying the same function.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dd_sample(n):</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    n_inside_circle <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> random.random()</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> random.random()</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;</span> <span class="fl">1.0</span>:</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            n_inside_circle <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> n_inside_circle <span class="op">/</span> n <span class="op">*</span> <span class="dv">4</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> ds.<span class="bu">apply</span>(dd_sample,meta<span class="op">=</span>(<span class="st">'x'</span>, <span class="st">'float64'</span>)).mean().compute()</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>3.141130625</code></pre>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit <span class="co">#595 ms ± 1.54 ms per loop</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> ds.<span class="bu">apply</span>(dd_sample,meta<span class="op">=</span>(<span class="st">'x'</span>, <span class="st">'float64'</span>)).mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>595 ms ± 1.54 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</p>
+<p>Yet dask offers an ecosystem of resource management (Scheduler, diagnostics, data partitions and Task Graphs) that make it a more attractive way to achieve the same thing in most cases. Resource management is handled automatically by the scheduler.</p>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for reference, delaying the same function.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dd_sample(n):</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    n_inside_circle <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> random.random()</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> random.random()</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;</span> <span class="fl">1.0</span>:</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            n_inside_circle <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> n_inside_circle <span class="op">/</span> n <span class="op">*</span> <span class="dv">4</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> ds.<span class="bu">apply</span>(dd_sample,meta<span class="op">=</span>(<span class="st">'x'</span>, <span class="st">'float64'</span>)).mean().compute()</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>3.1386374999999997</code></pre>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit <span class="co">#595 ms ± 1.54 ms per loop</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> ds.<span class="bu">apply</span>(dd_sample,meta<span class="op">=</span>(<span class="st">'x'</span>, <span class="st">'float64'</span>)).mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>855 ms ± 7.66 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</p>
 </section>
 <section id="key-points" class="level3 keypoints">
 <h3 class="anchored" data-anchor-id="key-points">Key points</h3>
