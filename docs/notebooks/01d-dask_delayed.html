@@ -122,6 +122,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../lesson.css">
 </head>
@@ -190,7 +191,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a></li>
   <li><a href="#dask-delayed" id="toc-dask-delayed" class="nav-link" data-scroll-target="#dask-delayed">Dask Delayed</a>
   <ul class="collapse">
-  <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge">Challenge</a></li>
+  <li><a href="#challenge-1" id="toc-challenge-1" class="nav-link" data-scroll-target="#challenge-1">Challenge 1</a></li>
+  <li><a href="#exercise-1-multiple-inputs" id="toc-exercise-1-multiple-inputs" class="nav-link" data-scroll-target="#exercise-1-multiple-inputs">Exercise 1 Multiple inputs</a></li>
+  <li><a href="#exercise-2-multiprocessing-vs-dask" id="toc-exercise-2-multiprocessing-vs-dask" class="nav-link" data-scroll-target="#exercise-2-multiprocessing-vs-dask">Exercise 2 Multiprocessing vs Dask</a></li>
   <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key points</a></li>
   </ul></li>
   </ul></li>
@@ -220,7 +223,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </section>
 <p>In this example we will explore the Schrodinger equation, and how we can use dask for an embarassingly parallel problem.</p>
-<div class="cell" data-execution_count="2">
+<p>See here for similar problems: <a href="https://github.com/natsunoyuki/Computational_Physics_in_Python">https://github.com/natsunoyuki/Computational_Physics_in_Python</a></p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the packages we need</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -228,8 +232,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> linalg <span class="im">as</span> sla</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Define a “computationally intensive” function.</p>
-<div class="cell" data-execution_count="4">
+<p>Define a “computationally intensive” function. Here we are solving for the eigenvalues of <span class="math inline">\({\displaystyle i\hbar {\frac {d}{dt}}\vert Ψ (t)\rangle ={\hat {H}}\vert Ψ (t)\rangle }\)</span></p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> schrodinger1D(Vfun):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Solves the 1 dimensional Schrodinger equation numerically</span></span>
@@ -285,7 +289,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> evl, evt, x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Define a function to plot H.</p>
-<div class="cell" data-execution_count="5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_H(H,neigs<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    evl <span class="op">=</span> H[<span class="dv">0</span>] <span class="co"># energy eigen values</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    indices <span class="op">=</span> np.argsort(evl)</span>
@@ -309,7 +313,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Define some potenial energy functions we want to explore.</p>
-<div class="cell" data-execution_count="7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Vfun1(x, params<span class="op">=</span>[<span class="dv">1</span>]):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Quantum harmonic oscillator potential energy function</span></span>
@@ -336,39 +340,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    B <span class="op">=</span> params[<span class="dv">1</span>]</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> params[<span class="dv">2</span>]</span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> A <span class="op">*</span> x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> B <span class="op">*</span> x <span class="op">**</span> <span class="dv">4</span> <span class="op">+</span> C</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">## Plot these with </span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co"># x = np.linspace(-10, 10, 100)</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.plot(Vfun1(x))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s get an idea for how long our schrodinger equation takes to solve.</p>
-<div class="cell" data-execution_count="8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> schrodinger1D(Vfun1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>CPU times: total: 78.1 ms
-Wall time: 57.1 ms</code></pre>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plot_H(H)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plot_H(H)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Energy eigenvalues:
-1: 1.00
-2: 3.00
-3: 4.99
-4: 6.99
-5: 8.98</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="01d-dask_delayed_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>prun <span class="op">-</span>s cumulative <span class="op">-</span>q <span class="op">-</span>l <span class="dv">10</span> <span class="op">-</span>T profile.txt</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> schrodinger1D(Vfun1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> 
-*** Profile printout saved to text file 'profile.txt'.</code></pre>
-</div>
+<p>Let’s profile this function. Is there any way we can speed it up? Or apply some of the techniques we have learned? We can use the iPython/Jupyter magic command %%prun which uses <em>cProfile</em>.</p>
+<p>TLDR: maybe not! Not all code can be “dasked” or parallelised easily.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>prun <span class="op">-</span>s cumulative <span class="op">-</span>q <span class="op">-</span>l <span class="dv">10</span> <span class="op">-</span>T profile.txt</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> schrodinger1D(Vfun1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>         51234 function calls (51201 primitive calls) in 243.228 seconds
 
@@ -387,69 +378,145 @@ Wall time: 57.1 ms</code></pre>
       875    0.008    0.000    1.852    0.002 _interface.py:730(_matmat)
       875    0.104    0.000    1.844    0.002 _base.py:400(dot)</code></pre>
 <p>Okay. There may not be anything we can improve of greatly. The slowest part is a highly optimised scipy subroutine that is calling fortran under-the-hood! So what if we wanted to run this function 2 times, 3 times, a million times? Perhaps trying different configuration parameters, or specifically here, different potential energy functions.</p>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The slow way: Loop through each of the PE definitions </span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and run the function one at a time.</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> []</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> [Vfun1,Vfun2,Vfun3] :</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    tic <span class="op">=</span> time.time()</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> schrodinger1D(f)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(time.time() <span class="op">-</span> tic, <span class="st">"s for"</span>, f)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    H.append(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.022294044494628906 s for &lt;function Vfun1 at 0x000001A97F662DC0&gt;
-0.02023482322692871 s for &lt;function Vfun2 at 0x000001A97F662E50&gt;
-0.053911447525024414 s for &lt;function Vfun3 at 0x000001A97F662EE0&gt;</code></pre>
-</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The slow way: Loop through each of the PE definitions </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and run the function one at a time.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> []</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> [Vfun1,Vfun2,Vfun3] :</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    tic <span class="op">=</span> time.time()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> schrodinger1D(f)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(time.time() <span class="op">-</span> tic, <span class="st">"s for"</span>, f)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="sc">{:.4f}</span><span class="st">s for </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(time.time()<span class="op">-</span>tic, f))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    H.append(result)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_H(H[0])</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_H(H[1])</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_H(H[2])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="dask-delayed" class="level2">
 <h2 class="anchored" data-anchor-id="dask-delayed">Dask Delayed</h2>
 <p>Now let’s try and solve the three variations in parallel. This is an embarassingly parallel problem, as each operation is completely seperate from the other.</p>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>lazy_H <span class="op">=</span> []</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> [Vfun1,Vfun2,Vfun3]:</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    H_temp <span class="op">=</span> dask.delayed(schrodinger1D)(f)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    lazy_H.append(H_temp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>CPU times: total: 0 ns
-Wall time: 0 ns</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>lazy_H <span class="op">=</span> []</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> [Vfun1,Vfun2,Vfun3]:</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    H_temp <span class="op">=</span> dask.delayed(schrodinger1D)(f)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    lazy_H.append(H_temp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lazy_H</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lazy_H</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<pre><code>[Delayed('schrodinger1D-e209d7d7-5784-410f-acd1-829458ab1f8e'),
- Delayed('schrodinger1D-689fef4f-21d2-4dba-8439-7f281693bc21'),
- Delayed('schrodinger1D-db753a7f-4fb2-4ce2-b902-1edfc8aac473')]</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>HH <span class="op">=</span> dask.compute(<span class="op">*</span>lazy_H)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>HH <span class="op">=</span> dask.compute(<span class="op">*</span>lazy_H)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>CPU times: total: 156 ms
-Wall time: 147 ms</code></pre>
-</div>
-</div>
-<section id="challenge" class="level3 challenge">
-<h3 class="anchored" data-anchor-id="challenge">Challenge</h3>
-<p>Can you write you change some of the parameters in the schrodinger1D function and see how the timing changes?</p>
-<p>Can you write your own PE function and add it to the dask delayed lazy compute list?</p>
+<p>Done! That is it. You can now run the schrodinger1D as many times as you like in parallel and dask will take of distributing out the work to as many cpus as it can gets its threads on!</p>
+<section id="challenge-1" class="level3 challenge">
+<h3 class="anchored" data-anchor-id="challenge-1">Challenge 1</h3>
+<p>Can you modify some of the parameters in the schrodinger1D function and see how the timing changes?</p>
 <details>
 <summary>
 Solution
 </summary>
-<p>Try changing the Nx parameter.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Nx <span class="op">=</span> <span class="dv">250</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Try changing the xmin, xmax, and Nx parameter. These adjust the resolution of the model. You can quickly see how you may want to parallelise this code as each numerical solution can take a long time at high-resolutions.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>xmin <span class="op">=</span> <span class="op">-</span><span class="dv">100</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>xmax <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Nx <span class="op">=</span> <span class="dv">500</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then re-run with</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> schrodinger1D(Vfun1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</section>
+<section id="exercise-1-multiple-inputs" class="level3 exercise">
+<h3 class="anchored" data-anchor-id="exercise-1-multiple-inputs">Exercise 1 Multiple inputs</h3>
+<p>Can you re-write the the schrodinger1D function to accept “params” as an argument, then run multiple parameter configurations with a single Potential Energy function?</p>
+<details>
+<summary>
+Step 1
+</summary>
+<p>Modify the <em>schrodinger1D</em> function to accept an additional argument, and pass that argument to the Vfun call.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Need to change line 1</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> schrodinger1D(Vfun, params): </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># And change line 29</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> Vfun(x, params <span class="op">=</span> params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</section>
+<details>
+<summary>
+Step 2
+</summary>
+<p>Choose the Vfun you want to explore, and make a list of parameters we want to sweep. I will be looking at Vfun3. A way to make a set of params is to use the <em>product</em> function from the <strong>itertools</strong> package.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>param_config <span class="op">=</span> [[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>],[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>],[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>]]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>params<span class="op">=</span><span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">list</span>, itertools.product(<span class="op">*</span>param_config)))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="output"><code>[-1, -1, -1]
+[-1, -1, 0]
+[-1, -1, 1]
+[-1, 0, -1]
+[-1, 0, 0]
+[-1, 0, 1]
+[-1, 1, -1]
+[-1, 1, 0]
+[-1, 1, 1]
+[0, -1, -1]
+[0, -1, 0]
+[0, -1, 1]
+[0, 0, -1]
+[0, 0, 0]
+[0, 0, 1]
+[0, 1, -1]
+[0, 1, 0]
+[0, 1, 1]
+[1, -1, -1]
+[1, -1, 0]
+[1, -1, 1]
+[1, 0, -1]
+[1, 0, 0]
+[1, 0, 1]
+[1, 1, -1]
+[1, 1, 0]
+[1, 1, 1]</code></pre>
+</details>
+</section></section></main></div>
+<details>
+<summary>
+Step 3
+</summary>
+<p>Re-write the dask delayed function to include your new paramaters.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>lazy_H <span class="op">=</span> []</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> param <span class="kw">in</span> params:</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(params)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    H_temp <span class="op">=</span> dask.delayed(schrodinger1D)(Vfun3, param)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    lazy_H.append(H_temp)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>lazy_H.compute()</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+<section id="exercise-2-multiprocessing-vs-dask" class="level3 exercise">
+<h3 data-anchor-id="exercise-2-multiprocessing-vs-dask">Exercise 2 Multiprocessing vs Dask</h3>
+<p>How do you implement this same functionality in native Python Multiprocessing?</p>
+<details>
+<summary>
+Solution
+</summary>
+<p>The answer looks something like this:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> Pool(processes<span class="op">=</span>ncpus) <span class="im">as</span> pool: </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>pool.imap(schrodinger1D, [Vfun1,Vfun2,Vfun3])</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    pool.close()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    pool.join()</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> [result <span class="cf">for</span> result <span class="kw">in</span> y]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>See the complete solution and description here: <a href="https://sydney-informatics-hub.github.io/ParallelPython/notebooks/schrodinger1D.py">schrodinger1D.py</a></p>
 </details>
 </section>
 <section id="key-points" class="level3 keypoints">
-<h3 class="anchored" data-anchor-id="key-points">Key points</h3>
+<h3 data-anchor-id="key-points">Key points</h3>
 <ul>
 <li>Dask can be used for embarassingly parallel problems.</li>
 <li>Finding where to make your code faster and understanding what kind of code/data you can determine which approaches you use.</li>
@@ -457,10 +524,10 @@ Solution
 </section>
 
 
-</section>
-</section>
 
-</main> <!-- /main -->
+
+
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -559,7 +626,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+ <!-- /content -->
 
 
 

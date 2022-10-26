@@ -30,6 +30,8 @@ format:
     toc: true
     code-overflow: wrap
     highlight-style: github
+    
+wrap: preserve
 
 
 

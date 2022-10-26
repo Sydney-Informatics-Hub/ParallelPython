@@ -433,7 +433,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 Solution
 </summary>
-<p>average price to carat $4928 15003 expensive diamonds compared to whole dataset</p>
+<p>average price to carat $4928
+15003 expensive diamonds compared to whole dataset</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>price_per_carat <span class="op">=</span> (ddf.price.<span class="bu">sum</span>() <span class="op">/</span> ddf.carat.<span class="bu">sum</span>()).compute()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -456,9 +457,12 @@ Solution
 <section id="demonstrate-best-practice-using-dask" class="level2">
 <h2 class="anchored" data-anchor-id="demonstrate-best-practice-using-dask">Demonstrate Best Practice using Dask</h2>
 <p>Best Practice Guides:</p>
-<p>Use set_index sparingly to speed up data naturally sorted on a single index - Use ddf.set_index(‘column’)</p>
-<p>Persist intelligently: If you have the available RAM for your dataset then you can persist data in memory. On distributed systems, it is a way of telling the cluster that it should start executing the computations that you have defined so far, and that it should try to keep those results in memory. - df = df.persist()</p>
-<p>Repartition to reduce overhead. As you reduce or increase the size of your pandas DataFrames by filtering or joining, it may be wise to reconsider how many partitions you need. Adjust partitians accordingly using repartition. - df = df.repartition(npartitions=df.npartitions // 100)</p>
+<p>Use set_index sparingly to speed up data naturally sorted on a single index
+- Use ddf.set_index(‘column’)</p>
+<p>Persist intelligently: If you have the available RAM for your dataset then you can persist data in memory. On distributed systems, it is a way of telling the cluster that it should start executing the computations that you have defined so far, and that it should try to keep those results in memory.
+- df = df.persist()</p>
+<p>Repartition to reduce overhead. As you reduce or increase the size of your pandas DataFrames by filtering or joining, it may be wise to reconsider how many partitions you need. Adjust partitians accordingly using repartition.
+- df = df.repartition(npartitions=df.npartitions // 100)</p>
 <p>Consider storing large data in Apache Parquet Format (binary column based format)</p>
 <div class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Time series data with every second observations from year 2000</span></span>
@@ -735,7 +739,8 @@ Solution
 <p>Blue Processing tasks.</p>
 <p>Green Saturated: It has enough work to stay busy.</p>
 <p>Red Idle: Does not have enough work to stay busy.</p>
-<p>Task Stream: Individual task across threads. - White colour represent deadtime.</p>
+<p>Task Stream: Individual task across threads.
+- White colour represent deadtime.</p>
 <div class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To load diagnostic in web browser on local</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> Client</span>
