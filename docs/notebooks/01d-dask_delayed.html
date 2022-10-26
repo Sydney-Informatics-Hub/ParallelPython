@@ -379,7 +379,7 @@ Wall time: 57.1 ms</code></pre>
       875    0.104    0.000    1.844    0.002 _base.py:400(dot)</code></pre>
 <p>Okay. There may not be anything we can improve of greatly. The slowest part is a highly optimised scipy subroutine that is calling fortran under-the-hood! So what if we wanted to run this function 2 times, 3 times, a million times? Perhaps trying different configuration parameters, or specifically here, different potential energy functions.</p>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The slow way: Loop through each of the PE definitions </span></span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The slow way: Loop through each of the PE definitions </span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and run the function one at a time.</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> []</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> [Vfun1,Vfun2,Vfun3] :</span>

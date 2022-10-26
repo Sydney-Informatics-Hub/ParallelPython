@@ -473,8 +473,8 @@ Solution
 </ul></li>
 <li><strong>Consider storing large data in <a href="https://parquet.apache.org/">Apache Parquet</a> Format</strong> (binary column based format)</li>
 </ol>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Time series data with every second observations from year 2000</span></span>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time series data with every second observations from year 2000</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ts_data </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># dask can use datetime index to reduce data efficiently</span></span>
@@ -502,7 +502,7 @@ Solution
 <pre><code>/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/site-packages/dask/dataframe/core.py:4948: UserWarning: New index has same name as existing, this is a no-op.
   warnings.warn(</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="14">
 
 <div>
 
