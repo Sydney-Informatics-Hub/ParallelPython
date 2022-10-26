@@ -18,13 +18,13 @@ Done. If you would prefer to have a local version of the Python environment we a
 
 To complete the exercises presented in the workshop, you may create a Python environment with the following packages:
 
-```
+```sh
 conda create -n quantum python=3.9 numpy scipy pandas scikit-learn seaborn dask jupyterlab -c conda-forge
 ```
 
 At the time of this workshop, the major package versions were:
 
-```
+```default
 dask=2022.10.0
 jupyterlab=3.4.8
 matplotlib-base=3.5.3

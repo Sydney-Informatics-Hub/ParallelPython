@@ -11,16 +11,14 @@ website:
         text: Home
       - href: setup.html
         text: "Setup"
-      - text: "Sessions"
-        menu:
-        - text: "Fundamentals"
-          href: notebooks/01a-pandas_fundamentals.html
-        - text: "Dask"
-          href: notebooks/01b-TransitionToDask.html
-        - text: "Scientific Computing"
-          href: notebooks/01c-Scientific_Computing.html
-        - text: "Dask Delayed"
-          href: notebooks/01d-dask_delayed.html
+      - text: "Fundamentals"
+        href: notebooks/01a-pandas_fundamentals.html
+      - text: "Dask"
+        href: notebooks/01b-TransitionToDask.html
+      - text: "Scientific Computing"
+        href: notebooks/01c-Scientific_Computing.html
+      - text: "Dask Delayed"
+        href: notebooks/01d-dask_delayed.html
 
           
 format:

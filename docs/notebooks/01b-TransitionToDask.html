@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.165">
+<meta name="generator" content="quarto-1.1.251">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -151,27 +151,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li class="nav-item">
     <a class="nav-link" href="../setup.html">Setup</a>
   </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sessions" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sessions</a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-sessions">    
-        <li>
-    <a class="dropdown-item" href="../notebooks/01a-pandas_fundamentals.html">
- <span class="dropdown-text">Fundamentals</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../notebooks/01a-pandas_fundamentals.html">Fundamentals</a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../notebooks/01b-TransitionToDask.html">
- <span class="dropdown-text">Dask</span></a>
+  <li class="nav-item">
+    <a class="nav-link active" href="../notebooks/01b-TransitionToDask.html" aria-current="page">Dask</a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../notebooks/01c-Scientific_Computing.html">
- <span class="dropdown-text">Scientific Computing</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../notebooks/01c-Scientific_Computing.html">Scientific Computing</a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../notebooks/01d-dask_delayed.html">
- <span class="dropdown-text">Dask Delayed</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../notebooks/01d-dask_delayed.html">Dask Delayed</a>
   </li>  
-    </ul>
-  </li>
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
@@ -187,12 +178,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-is-dask" id="toc-what-is-dask" class="nav-link active" data-scroll-target="#what-is-dask">What is Dask</a></li>
+  <li><a href="#what-is-dask" id="toc-what-is-dask" class="nav-link active" data-scroll-target="#what-is-dask">What is Dask?</a></li>
   <li><a href="#transitioning-to-dask-dataframes" id="toc-transitioning-to-dask-dataframes" class="nav-link" data-scroll-target="#transitioning-to-dask-dataframes">Transitioning to Dask DataFrames</a>
   <ul class="collapse">
   <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge">Challenge</a></li>
   </ul></li>
-  <li><a href="#demonstrate-best-practice-using-dask" id="toc-demonstrate-best-practice-using-dask" class="nav-link" data-scroll-target="#demonstrate-best-practice-using-dask">Demonstrate Best Practice using Dask</a></li>
+  <li><a href="#dask-best-practice-guide" id="toc-dask-best-practice-guide" class="nav-link" data-scroll-target="#dask-best-practice-guide">Dask Best Practice Guide</a></li>
   <li><a href="#using-external-functions-in-dask" id="toc-using-external-functions-in-dask" class="nav-link" data-scroll-target="#using-external-functions-in-dask">Using external functions in Dask</a></li>
   <li><a href="#dataframes-reading-in-messy-data" id="toc-dataframes-reading-in-messy-data" class="nav-link" data-scroll-target="#dataframes-reading-in-messy-data">DataFrames: Reading in messy data</a></li>
   <li><a href="#dask-arrays" id="toc-dask-arrays" class="nav-link" data-scroll-target="#dask-arrays">Dask Arrays</a>
@@ -212,25 +203,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <section id="what-is-dask" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-dask">What is Dask</h2>
-<p><a href="https://docs.dask.org/en/stable/">Dask</a></p>
-<p><a href="https://docs.dask.org/en/stable/10-minutes-to-dask.html">10 minute intro</a></p>
-<p><a href="https://docs.dask.org/en/stable/dataframe-api.html">API Reference</a></p>
+<h2 class="anchored" data-anchor-id="what-is-dask">What is Dask?</h2>
+<ul>
+<li><a href="https://docs.dask.org/en/stable/">Dask</a></li>
+<li><a href="https://docs.dask.org/en/stable/10-minutes-to-dask.html">10 minute intro</a></li>
+<li><a href="https://docs.dask.org/en/stable/dataframe-api.html">API Reference</a></li>
+</ul>
 <p><strong>Dask DataFrames coordinate many pandas DataFrames/Series arranged along the index</strong>. A Dask DataFrame is partitioned row-wise, grouping rows by index value for efficiency. These pandas objects may live on disk or on other machines.</p>
 <p>Internally, a Dask DataFrame is split into many partitions, where each partition is one Pandas DataFrame. When our index is sorted and we know the values of the divisions of our partitions, then we can be clever and efficient with expensive algorithms (e.g.&nbsp;groupby’s, joins, etc…).</p>
 <p><strong>Use Cases:</strong></p>
-<p>Dask DataFrame is used in situations where pandas is commonly needed, usually when pandas fails due to data size or computation speed. Common use cases are:</p>
+<p>Dask DataFrame is used in situations where pandas is commonly needed, usually when pandas fails due to data size or speed of computation. Common use cases are:</p>
 <ul>
 <li><p>Manipulating large datasets, even when those datasets don’t fit in memory</p></li>
 <li><p>Accelerating long computations by using many cores</p></li>
-<li><p>Distributed computing on large datasets with standard pandas operations like groupby, join, and time series computations</p></li>
+<li><p>Distributed computing on large datasets with standard pandas operations like <code>groupby</code>, <code>join</code>, and time series computations</p></li>
 </ul>
-<p>Dask DataFrame may not be the best choice in the following situations If :</p>
+<p>Dask DataFrame may not be the best choice in the following situations:</p>
 <ul>
-<li><p>your dataset fits comfortably into RAM on your laptop, then you may be better off just using pandas. There may be simpler ways to improve performance than through parallelism</p></li>
-<li><p>your dataset doesn’t fit neatly into the pandas tabular model, then you might find more use in dask.bag or dask.array</p></li>
-<li><p>you need functions that are not implemented in Dask DataFrame, then you might want to look at dask.delayed which offers more flexibility</p></li>
-<li><p>you need a proper database with all that databases offer you might prefer something like Postgres</p></li>
+<li><p>If your dataset fits comfortably into RAM on your laptop, then you may be better off just using pandas. There may be simpler ways to improve performance than through parallelism</p></li>
+<li><p>If your dataset doesn’t fit neatly into the pandas tabular model, then you might find more use in <a href="https://docs.dask.org/en/stable/bag.html">dask.bag</a> or <a href="https://docs.dask.org/en/stable/array.html">dask.array</a></p></li>
+<li><p>If you need functions that are not implemented in Dask DataFrame, then you might want to look at <a href="https://docs.dask.org/en/stable/delayed.html">dask.delayed</a> which offers more flexibility</p></li>
+<li><p>If you need a proper database with all of the features that databases offer you might prefer something like <a href="https://www.postgresql.org/">Postgres</a> or <a href="https://www.sqlite.org/index.html">SQLite</a></p></li>
 </ul>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Import libraries and datasets</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -247,20 +240,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="transitioning-to-dask-dataframes">Transitioning to Dask DataFrames</h2>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load ddf from existing df</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> dd.from_pandas(df,npartitions <span class="op">=</span> <span class="dv">2</span>) </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#many loading options available</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># many loading options available</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ddf <span class="co">#dask dataframe </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#by default it has lazy execution where computation are triggered by compute() (or head) </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>ddf.compute() <span class="co">#converd dd to pd.DataFrame</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># by default it has lazy execution where computation are triggered by compute() (or head) </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>ddf.compute() <span class="co"># convert dd to pd.DataFrame</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ddf.head(<span class="dv">2</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Attributes of Dask dataframe distinct from pd.Dataframe</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ddf.npartitions <span class="co"># number of partitians</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>ddf.divisions <span class="co">#Divisions includes the minimum value of every partition’s index and the maximum value of the last partition’s index</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>ddf.partitions[<span class="dv">1</span>] <span class="co">#access a particular partitian</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Attributes of Dask dataframe distinct from pd.Dataframe</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ddf.npartitions <span class="co"># number of partitions</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>ddf.divisions <span class="co"># Divisions includes the minimum value of every partition’s index and the maximum value of the last partition’s index</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>ddf.partitions[<span class="dv">1</span>] <span class="co"># access a particular partition</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>ddf.partitions[<span class="dv">1</span>].index <span class="co"># which have similar pd.DataFrame attributes</span></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Special consideration</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Special consideration</span></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># By default, groupby methods return an object with only 1 partition. </span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># This is to optimize performance, and assumes the groupby reduction returns an object that is small enough to fit into memory. </span></span>
@@ -497,18 +490,18 @@ Solution
   <tbody>
     <tr>
       <th>Alice</th>
-      <td>-76.577676</td>
-      <td>0.999903</td>
+      <td>322.982262</td>
+      <td>0.999975</td>
     </tr>
     <tr>
       <th>Bob</th>
-      <td>68.025989</td>
-      <td>0.999999</td>
+      <td>34.466002</td>
+      <td>0.999986</td>
     </tr>
     <tr>
       <th>Charlie</th>
-      <td>150.461159</td>
-      <td>0.999970</td>
+      <td>222.431201</td>
+      <td>0.999984</td>
     </tr>
   </tbody>
 </table>
@@ -539,7 +532,7 @@ Solution
 </section>
 <section id="dataframes-reading-in-messy-data" class="level2">
 <h2 class="anchored" data-anchor-id="dataframes-reading-in-messy-data">DataFrames: Reading in messy data</h2>
-<p>Go through existing binder - demostrates both dask and using delayed function</p>
+<p>Go through <a href="https://examples.dask.org/dataframes/04-reading-messy-data-into-dataframes.html">existing Binder</a> - demostrates both dask and using delayed functions.</p>
 </section>
 <section id="dask-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="dask-arrays">Dask Arrays</h2>
@@ -723,8 +716,8 @@ Solution
 <div>
     <div style="width: 24px; height: 24px; background-color: #e1e1e1; border: 3px solid #9D9D9D; border-radius: 5px; position: absolute;"> </div>
     <div style="margin-left: 48px;">
-        <h3 style="margin-bottom: 0px;" class="anchored">Client</h3>
-        <p style="color: #9D9D9D; margin-bottom: 0px;">Client-fddb0738-533b-11ed-8830-b469212762d9</p>
+        <h3 style="margin-bottom: 0px;" class="anchored" data-anchor-id="a-few-key-definitions">Client</h3>
+        <p style="color: #9D9D9D; margin-bottom: 0px;">Client-c7757bc6-5514-11ed-ba5c-fe453513c75b</p>
         <table style="width: 100%; text-align: left;">
 
         <tbody><tr>
@@ -753,22 +746,22 @@ Solution
     </div>
     <div style="margin-left: 48px;">
         <h3 style="margin-bottom: 0px; margin-top: 0px;" class="anchored">LocalCluster</h3>
-        <p style="color: #9D9D9D; margin-bottom: 0px;">b7149360</p>
+        <p style="color: #9D9D9D; margin-bottom: 0px;">28e449c4</p>
         <table style="width: 100%; text-align: left;">
             <tbody><tr>
                 <td style="text-align: left;">
                     <strong>Dashboard:</strong> <a href="http://127.0.0.1:8787/status" target="_blank">http://127.0.0.1:8787/status</a>
                 </td>
                 <td style="text-align: left;">
-                    <strong>Workers:</strong> 4
+                    <strong>Workers:</strong> 5
                 </td>
             </tr>
             <tr>
                 <td style="text-align: left;">
-                    <strong>Total threads:</strong> 8
+                    <strong>Total threads:</strong> 10
                 </td>
                 <td style="text-align: left;">
-                    <strong>Total memory:</strong> 31.86 GiB
+                    <strong>Total memory:</strong> 32.00 GiB
                 </td>
             </tr>
             
@@ -790,14 +783,14 @@ Solution
         <div style="width: 24px; height: 24px; background-color: #FFF7E5; border: 3px solid #FF6132; border-radius: 5px; position: absolute;"> </div>
         <div style="margin-left: 48px;">
             <h3 style="margin-bottom: 0px;" class="anchored">Scheduler</h3>
-            <p style="color: #9D9D9D; margin-bottom: 0px;">Scheduler-39946b8c-a667-4260-936e-09e59ef3ac13</p>
+            <p style="color: #9D9D9D; margin-bottom: 0px;">Scheduler-00cc99f1-ae30-4653-a674-8f38139fd85b</p>
             <table style="width: 100%; text-align: left;">
                 <tbody><tr>
                     <td style="text-align: left;">
-                        <strong>Comm:</strong> tcp://127.0.0.1:64856
+                        <strong>Comm:</strong> tcp://127.0.0.1:63334
                     </td>
                     <td style="text-align: left;">
-                        <strong>Workers:</strong> 4
+                        <strong>Workers:</strong> 5
                     </td>
                 </tr>
                 <tr>
@@ -805,7 +798,7 @@ Solution
                         <strong>Dashboard:</strong> <a href="http://127.0.0.1:8787/status" target="_blank">http://127.0.0.1:8787/status</a>
                     </td>
                     <td style="text-align: left;">
-                        <strong>Total threads:</strong> 8
+                        <strong>Total threads:</strong> 10
                     </td>
                 </tr>
                 <tr>
@@ -813,7 +806,7 @@ Solution
                         <strong>Started:</strong> Just now
                     </td>
                     <td style="text-align: left;">
-                        <strong>Total memory:</strong> 31.86 GiB
+                        <strong>Total memory:</strong> 32.00 GiB
                     </td>
                 </tr>
             </tbody></table>
@@ -836,7 +829,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:64890
+                            <strong>Comm: </strong> tcp://127.0.0.1:63357
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -844,21 +837,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64891/status" target="_blank">http://127.0.0.1:64891/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:63364/status" target="_blank">http://127.0.0.1:63364/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 7.97 GiB
+                            <strong>Memory: </strong> 6.40 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:64860
+                            <strong>Nanny: </strong> tcp://127.0.0.1:63337
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-82k95ncc
+                            <strong>Local directory: </strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-0x5qvryt
                         </td>
                     </tr>
 
@@ -881,7 +874,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:64893
+                            <strong>Comm: </strong> tcp://127.0.0.1:63355
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -889,21 +882,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64895/status" target="_blank">http://127.0.0.1:64895/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:63362/status" target="_blank">http://127.0.0.1:63362/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 7.97 GiB
+                            <strong>Memory: </strong> 6.40 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:64861
+                            <strong>Nanny: </strong> tcp://127.0.0.1:63340
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-qjwnr0_y
+                            <strong>Local directory: </strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-0s__jczq
                         </td>
                     </tr>
 
@@ -926,7 +919,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:64887
+                            <strong>Comm: </strong> tcp://127.0.0.1:63358
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -934,21 +927,21 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64888/status" target="_blank">http://127.0.0.1:64888/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:63360/status" target="_blank">http://127.0.0.1:63360/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 7.97 GiB
+                            <strong>Memory: </strong> 6.40 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:64862
+                            <strong>Nanny: </strong> tcp://127.0.0.1:63338
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-k00spw3h
+                            <strong>Local directory: </strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-mnj91k25
                         </td>
                     </tr>
 
@@ -971,7 +964,7 @@ Solution
                 <table style="width: 100%; text-align: left;">
                     <tbody><tr>
                         <td style="text-align: left;">
-                            <strong>Comm: </strong> tcp://127.0.0.1:64894
+                            <strong>Comm: </strong> tcp://127.0.0.1:63356
                         </td>
                         <td style="text-align: left;">
                             <strong>Total threads: </strong> 2
@@ -979,21 +972,66 @@ Solution
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:64896/status" target="_blank">http://127.0.0.1:64896/status</a>
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:63361/status" target="_blank">http://127.0.0.1:63361/status</a>
                         </td>
                         <td style="text-align: left;">
-                            <strong>Memory: </strong> 7.97 GiB
+                            <strong>Memory: </strong> 6.40 GiB
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: left;">
-                            <strong>Nanny: </strong> tcp://127.0.0.1:64859
+                            <strong>Nanny: </strong> tcp://127.0.0.1:63341
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left;">
-                            <strong>Local directory: </strong> C:\Users\nbutter\AppData\Local\Temp\dask-worker-space\worker-0uhuqhig
+                            <strong>Local directory: </strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-nvggbtok
+                        </td>
+                    </tr>
+
+                    
+
+                    
+
+                </tbody></table>
+            </details>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <div style="width: 24px; height: 24px; background-color: #DBF5FF; border: 3px solid #4CC9FF; border-radius: 5px; position: absolute;"> </div>
+            <div style="margin-left: 48px;">
+            <details>
+                <summary>
+                    <h4 style="margin-bottom: 0px; display: inline;" class="anchored">Worker: 4</h4>
+                </summary>
+                <table style="width: 100%; text-align: left;">
+                    <tbody><tr>
+                        <td style="text-align: left;">
+                            <strong>Comm: </strong> tcp://127.0.0.1:63359
+                        </td>
+                        <td style="text-align: left;">
+                            <strong>Total threads: </strong> 2
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <strong>Dashboard: </strong> <a href="http://127.0.0.1:63363/status" target="_blank">http://127.0.0.1:63363/status</a>
+                        </td>
+                        <td style="text-align: left;">
+                            <strong>Memory: </strong> 6.40 GiB
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <strong>Nanny: </strong> tcp://127.0.0.1:63339
+                        </td>
+                        <td style="text-align: left;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left;">
+                            <strong>Local directory: </strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-sgo11i0u
                         </td>
                     </tr>
 
@@ -1033,9 +1071,9 @@ Solution
 <section id="key-points" class="level3 keypoints">
 <h3 class="anchored" data-anchor-id="key-points">Key points</h3>
 <ul>
-<li>Familarity of Dask API to pandas makes the transition easy compared to alternatives - although not all functions are replicated.</li>
-<li>Scaling up to distributed systems, or down to simple running on your laptop, makes your code easily transferable between different resources.</li>
-<li>Dask enables parallelism without low level alterations in code</li>
+<li>The similarity-by-design of the Dask API with pandas makes the transition easy compared to alternatives - although not all functions are replicated.</li>
+<li>Scaling up to distributed systems, or down to simply running on your laptop, makes code easily transferable between different resources.</li>
+<li>Dask enables parallelism without low level alterations in code.</li>
 </ul>
 </section>
 
