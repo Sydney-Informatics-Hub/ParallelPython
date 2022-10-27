@@ -341,8 +341,8 @@ div.error {
 	 margin-left: -5px;
 }
  .challenge h3:before {
-	 font-family: 'FontAwesome';
-	 content: "\f14b";
+	 font-family: 'bootstrap-icons';
+	 content: "\F4CA";
 	 float: left;
 	 color: #000000;
 	 padding-left: 5px;
@@ -368,8 +368,8 @@ div.error {
 	 margin-left: -5px;
 }
  .keypoints h3:before {
-	 font-family: 'FontAwesome';
-	 content: "\f140";
+	 font-family: 'bootstrap-icons';
+	 content: "\F1DE";
 	 float: left;
 	 color: #FFFFFF;
 	 padding-left: 5px;
@@ -395,8 +395,8 @@ div.error {
 	 margin-left: -5px;
 }
  .objectives h3:before {
-	 font-family: 'FontAwesome';
-	 content: "\f279";
+	 font-family: 'bootstrap-icons';
+	 content: "\F47F";
 	 float: left;
 	 color: #000000;
 	 padding-left: 5px;
@@ -448,8 +448,8 @@ div.error {
 	 margin-left: -5px;
 }
  .questions h3:before {
-	 font-family: 'FontAwesome';
-	 content: "\f059";
+	 font-family: 'bootstrap-icons';
+	 content: "\f504";
 	 float: left;
 	 color: #000000;
 	 padding-left: 5px;
