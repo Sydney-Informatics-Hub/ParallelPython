@@ -238,7 +238,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="transitioning-to-dask-dataframes" class="level2">
 <h2 class="anchored" data-anchor-id="transitioning-to-dask-dataframes">Transitioning to Dask DataFrames</h2>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load ddf from existing df</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load ddf from existing df</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> dd.from_pandas(df,npartitions <span class="op">=</span> <span class="dv">2</span>) </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># many loading options available</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -258,8 +258,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># By default, groupby methods return an object with only 1 partition. </span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># This is to optimize performance, and assumes the groupby reduction returns an object that is small enough to fit into memory. </span></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># If your returned object is larger than this, you can increase the number of output partitions using the split_out argument.</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>ddf.groupby(<span class="st">'cut'</span>).mean() <span class="co">#npartitains=1</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>ddf.groupby(<span class="st">'cut'</span>).mean(split_out<span class="op">=</span><span class="dv">2</span>) <span class="co">#npartitains=2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>ddf.groupby(<span class="st">'cut'</span>).mean() <span class="co">#npartitions=1</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>ddf.groupby(<span class="st">'cut'</span>).mean(split_out<span class="op">=</span><span class="dv">2</span>) <span class="co">#npartitions=2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/site-packages/dask/dataframe/groupby.py:1351: FutureWarning: In the future, `sort` for groupby operations will default to `True` to match the behavior of pandas. However, `sort=True` does not work with `split_out&gt;1`. To retain the current behavior for multiple output partitions, set `sort=False`.
+  warnings.warn(SORT_SPLIT_OUT_WARNING, FutureWarning)
+/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/site-packages/dask/dataframe/groupby.py:1351: FutureWarning: In the future, `sort` for groupby operations will default to `True` to match the behavior of pandas. However, `sort=True` does not work with `split_out&gt;1`. To retain the current behavior for multiple output partitions, set `sort=False`.
+  warnings.warn(SORT_SPLIT_OUT_WARNING, FutureWarning)</code></pre>
 
 <div><strong>Dask DataFrame Structure:</strong></div>
 <div>
@@ -322,33 +326,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 </div>
 <div>Dask Name: truediv, 19 graph layers</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dask syntax intentionally mimics most well knows pandas apis</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ddf.loc[<span class="dv">15</span>:<span class="dv">20</span>] <span class="co"># subset rows</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ddf[[<span class="st">"carat"</span>,<span class="st">"price"</span>]] <span class="co">#subset columns</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ddf.dtypes  <span class="co">#access attributes</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ddf.head(<span class="dv">3</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ddf.query(<span class="st">'price &gt; 50'</span>) <span class="co">#same as pd.DataFrame</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>lazy_manipulations <span class="op">=</span> (ddf.query(<span class="st">'price &gt; 50'</span>).</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    groupby(<span class="st">'clarity'</span>).</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    price.mean())</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>lazy_manipulations.compute() <span class="co">#trigger computation to pd.DataFrame</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#dask aggregate has more features than pandas agg equivalent, supports reductions on the same group.</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>ddf_aggs <span class="op">=</span> (ddf.groupby(<span class="st">'cut'</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    .aggregate({<span class="st">"price"</span>:<span class="st">"mean"</span>,<span class="st">"carat"</span>:<span class="st">"sum"</span>}))</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#Can persist data into RAM if possible making future operations on it faster</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>ddf_aggs <span class="op">=</span> ddf_aggs.repartition(npartitions <span class="op">=</span> <span class="dv">1</span>).persist()</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>df_merged <span class="op">=</span> ddf.merge(ddf_aggs,left_on<span class="op">=</span> <span class="st">"cut"</span>,right_index<span class="op">=</span><span class="va">True</span>, suffixes<span class="op">=</span>(<span class="st">"_original"</span>, <span class="st">"_aggregated"</span>))</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>df_merged.head(<span class="dv">2</span>)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#note not all apis from pandas available</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#ddf.filter(['carat','price'])  #not available</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#https://docs.dask.org/en/stable/dataframe-api.html</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dask syntax intentionally mimics most well knows pandas apis</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ddf.loc[<span class="dv">15</span>:<span class="dv">20</span>] <span class="co"># subset rows</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ddf[[<span class="st">"carat"</span>,<span class="st">"price"</span>]] <span class="co"># subset columns</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ddf.dtypes  <span class="co"># access attributes</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ddf.head(<span class="dv">3</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ddf.query(<span class="st">'price &gt; 50'</span>) <span class="co"># same as pd.DataFrame</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>lazy_manipulations <span class="op">=</span> (ddf.query(<span class="st">'price &gt; 50'</span>).</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    groupby(<span class="st">'clarity'</span>).</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    price.mean())</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>lazy_manipulations.compute() <span class="co"># trigger computation to pd.DataFrame</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># dask aggregate has more features than pandas agg equivalent, supports reductions on the same group.</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>ddf_aggs <span class="op">=</span> (ddf.groupby(<span class="st">'cut'</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    .aggregate({<span class="st">"price"</span>:<span class="st">"mean"</span>,<span class="st">"carat"</span>:<span class="st">"sum"</span>}))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Can persist data into RAM if possible making future operations on it faster</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ddf_aggs <span class="op">=</span> ddf_aggs.repartition(npartitions <span class="op">=</span> <span class="dv">1</span>).persist()</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>df_merged <span class="op">=</span> ddf.merge(ddf_aggs,left_on<span class="op">=</span> <span class="st">"cut"</span>,right_index<span class="op">=</span><span class="va">True</span>, suffixes<span class="op">=</span>(<span class="st">"_original"</span>, <span class="st">"_aggregated"</span>))</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>df_merged.head(<span class="dv">2</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <div>
 
@@ -404,6 +405,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </tbody>
 </table>
 </div>
+<p>Note that not all apis from pandas are available in Dask. For example, <code>ddf.filter(['carat','price'])</code> is not available. For more details and a list of available options, see <a href="https://docs.dask.org/en/stable/dataframe-api.html">here</a>.</p>
 <section id="challenge" class="level3 challenge">
 <h3 class="anchored" data-anchor-id="challenge">Challenge</h3>
 <ol type="a">
@@ -416,61 +418,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 Solution
 </summary>
-<p>average price to carat $4928
-15003 expensive diamonds compared to whole dataset</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>price_per_carat <span class="op">=</span> (ddf.price.<span class="bu">sum</span>() <span class="op">/</span> ddf.carat.<span class="bu">sum</span>()).compute()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> ddf.assign(price_to_carat <span class="op">=</span> ddf.price <span class="op">/</span> ddf.carat)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greater_than_avg(price):</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> price <span class="op">&gt;</span> price_per_carat:</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">True</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> ddf.assign(expensive <span class="op">=</span> ddf.price.<span class="bu">apply</span>(greater_than_avg))</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>ddf.sort_values(<span class="st">'expensive'</span>,ascending<span class="op">=</span> <span class="va">False</span>).compute()</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>number_expensive <span class="op">=</span> ddf.expensive.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Average price to carat $4928</li>
+<li>15003 expensive diamonds compared to whole dataset</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>price_per_carat <span class="op">=</span> (ddf.price.<span class="bu">sum</span>() <span class="op">/</span> ddf.carat.<span class="bu">sum</span>()).compute()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> ddf.assign(price_to_carat <span class="op">=</span> ddf.price <span class="op">/</span> ddf.carat)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greater_than_avg(price):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> price <span class="op">&gt;</span> price_per_carat:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ddf <span class="op">=</span> ddf.assign(expensive <span class="op">=</span> ddf.price.<span class="bu">apply</span>(greater_than_avg))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ddf.sort_values(<span class="st">'expensive'</span>,ascending<span class="op">=</span> <span class="va">False</span>).compute()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>number_expensive <span class="op">=</span> ddf.expensive.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </section>
 </section>
-<section id="demonstrate-best-practice-using-dask" class="level2">
-<h2 class="anchored" data-anchor-id="demonstrate-best-practice-using-dask">Demonstrate Best Practice using Dask</h2>
-<p>Best Practice Guides:</p>
-<p>Use set_index sparingly to speed up data naturally sorted on a single index
-- Use ddf.set_index(‘column’)</p>
-<p>Persist intelligently: If you have the available RAM for your dataset then you can persist data in memory. On distributed systems, it is a way of telling the cluster that it should start executing the computations that you have defined so far, and that it should try to keep those results in memory.
-- df = df.persist()</p>
-<p>Repartition to reduce overhead. As you reduce or increase the size of your pandas DataFrames by filtering or joining, it may be wise to reconsider how many partitions you need. Adjust partitians accordingly using repartition.
-- df = df.repartition(npartitions=df.npartitions // 100)</p>
-<p>Consider storing large data in Apache Parquet Format (binary column based format)</p>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Time series data with every second observations from year 2000</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ts_data </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#dask can use datetime index to reduce data efficiently</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ts_data[[<span class="st">"x"</span>, <span class="st">"y"</span>]].resample(<span class="st">"1h"</span>).mean().head()</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Build up lazy data manipulations and compute selectively to reduce data</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_data.groupby(<span class="st">'name'</span>).aggregate({<span class="st">"x"</span>: <span class="st">"sum"</span>, <span class="st">"y"</span>: <span class="st">"max"</span>})</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Repartition appropriately, smaller dataset doesnt need many partitians</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_subset.repartition(npartitions<span class="op">=</span> <span class="dv">1</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>ts_subset.head(<span class="dv">10</span>)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Set index selectively as its expensive</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_subset.set_index(<span class="st">"name"</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Persist in RAM if possible after expensive calculations to rather than continue building lazy operations. </span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_subset.persist()</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Continue with pandas if memory is fine</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ts_subset_df <span class="op">=</span> ts_subset.compute()</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>ts_subset_df.sort_values(<span class="st">"name"</span>).head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="dask-best-practice-guide" class="level2">
+<h2 class="anchored" data-anchor-id="dask-best-practice-guide">Dask Best Practice Guide</h2>
+<ol type="1">
+<li><strong>Use <code>set_index()</code> sparingly</strong> to speed up data naturally sorted on a single index
+<ul>
+<li>Use <code>ddf.set_index('column')</code></li>
+</ul></li>
+<li><strong>Persist intelligently</strong></li>
+</ol>
+<ul>
+<li>If you have the available RAM for your dataset then you can persist data in memory. On distributed systems, it is a way of telling the cluster that it should start executing the computations that you have defined so far, and that it should try to keep those results in memory.
+<ul>
+<li><code>df = df.persist()</code></li>
+</ul></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Repartition to reduce overhead</strong>
+<ul>
+<li>As you reduce or increase the size of your pandas DataFrames by filtering or joining, it may be wise to reconsider how many partitions you need. Adjust partitions accordingly using repartition.</li>
+<li><code>df = df.repartition(npartitions=df.npartitions // 100)</code></li>
+</ul></li>
+<li><strong>Consider storing large data in <a href="https://parquet.apache.org/">Apache Parquet</a> Format</strong> (binary column based format)</li>
+</ol>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time series data with every second observations from year 2000</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ts_data </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># dask can use datetime index to reduce data efficiently</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ts_data[[<span class="st">"x"</span>, <span class="st">"y"</span>]].resample(<span class="st">"1h"</span>).mean().head()</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Build up lazy data manipulations and compute selectively to reduce data</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_data.groupby(<span class="st">'name'</span>).aggregate({<span class="st">"x"</span>: <span class="st">"sum"</span>, <span class="st">"y"</span>: <span class="st">"max"</span>})</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Repartition appropriately, smaller dataset doesn't need many partitions</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_subset.repartition(npartitions<span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ts_subset.head(<span class="dv">10</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Set index selectively as its expensive</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_subset.set_index(<span class="st">"name"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Persist in RAM if possible after expensive calculations to rather than continue building lazy operations. </span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>ts_subset <span class="op">=</span> ts_subset.persist()</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Continue with pandas if memory is fine</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>ts_subset_df <span class="op">=</span> ts_subset.compute()</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>ts_subset_df.sort_values(<span class="st">"name"</span>).head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>/Users/darya/opt/miniconda3/envs/quantum/lib/python3.9/site-packages/dask/dataframe/core.py:4948: UserWarning: New index has same name as existing, this is a no-op.
+  warnings.warn(</code></pre>
 
 <div>
 
@@ -509,25 +525,25 @@ Solution
 </section>
 <section id="using-external-functions-in-dask" class="level2">
 <h2 class="anchored" data-anchor-id="using-external-functions-in-dask">Using external functions in Dask</h2>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(partition):</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> <span class="bu">len</span>(partition):</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    est <span class="op">=</span> LinearRegression()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    est.fit(partition[[<span class="st">"x"</span>]].values, partition.y.values)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> est</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">The meta argument tells Dask how to create the DataFrame or Series that will hold the result of .apply(). </span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">In this case, train() returns a single value, so .apply() will create a Series. </span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">This means we need to tell Dask what the type of that single column should be and optionally give it a name.</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> ts_subset.groupby(<span class="st">"name"</span>).<span class="bu">apply</span>(</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    train, meta<span class="op">=</span>(<span class="st">"LinearRegression"</span>, <span class="bu">object</span>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>).compute()</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"Bob"</span>] <span class="co">#linear model of a particular group</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(partition):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> <span class="bu">len</span>(partition):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    est <span class="op">=</span> LinearRegression()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    est.fit(partition[[<span class="st">"x"</span>]].values, partition.y.values)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> est</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">The meta argument tells Dask how to create the DataFrame or Series that will hold the result of .apply(). </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">In this case, train() returns a single value, so .apply() will create a Series. </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">This means we need to tell Dask what the type of that single column should be and optionally give it a name.</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> ts_subset.groupby(<span class="st">"name"</span>).<span class="bu">apply</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    train, meta<span class="op">=</span>(<span class="st">"LinearRegression"</span>, <span class="bu">object</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>).compute()</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"Bob"</span>] <span class="co"># linear model of a particular group</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
 </section>
 <section id="dataframes-reading-in-messy-data" class="level2">
@@ -536,9 +552,9 @@ Solution
 </section>
 <section id="dask-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="dask-arrays">Dask Arrays</h2>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <table>
     <tbody><tr>
@@ -616,11 +632,11 @@ Solution
         </td>
     </tr>
 </tbody></table>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#numpy syntax as usual</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> x.T</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> y[::<span class="dv">2</span>, <span class="dv">5000</span>:].mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="co"># axis 0 is index, axis 1 is columns</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>z</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Trigger compute and investigate Client</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numpy syntax as usual</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> x.T</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> y[::<span class="dv">2</span>, <span class="dv">5000</span>:].mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="co"># axis 0 is index, axis 1 is columns</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger compute and investigate Client</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <table>
     <tbody><tr>
@@ -696,22 +712,29 @@ Solution
 </section>
 <section id="diagnostics---profile-resource-efficiency-in-real-time" class="level2">
 <h2 class="anchored" data-anchor-id="diagnostics---profile-resource-efficiency-in-real-time">Diagnostics - Profile resource efficiency in real time</h2>
-<p>Enables resource monitoring across RAM, CPU, workers, threads and tasks (functions).</p>
-<p>https://docs.dask.org/en/stable/dashboard.html</p>
-<p>Definitions:</p>
-<p>Bytes Stored and Bytes per Worker: Cluster memory and Memory per worker</p>
-<p>Task Processing/CPU Utilization/Occupancy: Tasks being processed by each worker/ CPU Utilization per worker/ Expected runtime for all tasks currently on a worker.</p>
-<p>Progress: Progress of a set of tasks.</p>
-<p>There are three different colors worker tasks graph:</p>
-<p>Blue Processing tasks.</p>
-<p>Green Saturated: It has enough work to stay busy.</p>
-<p>Red Idle: Does not have enough work to stay busy.</p>
-<p>Task Stream: Individual task across threads.
-- White colour represent deadtime.</p>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To load diagnostic in web browser on local</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> Client</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> Client()</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>client <span class="co">#client.shutdown after use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The Dask Dashboard enables resource monitoring across RAM, CPU, workers, threads and tasks (functions).</p>
+<p><a href="https://docs.dask.org/en/stable/dashboard.html">https://docs.dask.org/en/stable/dashboard.html</a></p>
+<section id="a-few-key-definitions" class="level4">
+<h4 class="anchored">A few key definitions:</h4>
+<ul>
+<li><p><strong>Bytes Stored and Bytes per Worker</strong>: Cluster memory and Memory per worker.</p></li>
+<li><p><strong>Task Processing/CPU Utilization/Occupancy</strong>: Tasks being processed by each worker/ CPU Utilization per worker/ Expected runtime for all tasks currently on a worker.</p></li>
+<li><p><strong>Progress</strong>: Progress of a set of tasks.</p></li>
+</ul>
+<p>There are three different colors of workers in a task graph:</p>
+<ul>
+<li><p><strong>Blue</strong>: Processing tasks.</p></li>
+<li><p><strong>Green</strong>: Saturated: It has enough work to stay busy.</p></li>
+<li><p><strong>Red</strong>: Idle: Does not have enough work to stay busy.</p></li>
+<li><p><strong>Task Stream</strong>: Individual task across threads.</p>
+<ul>
+<li>White colour represents deadtime.</li>
+</ul></li>
+</ul>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To load diagnostic in web browser on local</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> Client</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> Client()</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>client <span class="co">#client.shutdown after use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <div>
     <div style="width: 24px; height: 24px; background-color: #e1e1e1; border: 3px solid #9D9D9D; border-radius: 5px; position: absolute;"> </div>
@@ -1056,18 +1079,19 @@ Solution
 
     </div>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Example of efficient resource utilisation</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (da.arcsin(x) <span class="op">+</span> da.arcsin(y)).<span class="bu">sum</span>(axis <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>z.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>array([114420.94910491, 113986.41465234, 114318.49502783, ...,
-       114439.17350853, 114145.98510378, 114053.96944999])</code></pre>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inefficient resource utilisation - dask introduces too much overhead for simple sizes np handles well</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000_000</span>),chunks <span class="op">=</span> (<span class="dv">1000</span>,))</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>4998829.323389178</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of efficient resource utilisation</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (da.arcsin(x) <span class="op">+</span> da.arcsin(y)).<span class="bu">sum</span>(axis <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>z.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>array([114139.43869439, 114133.41973571, 114035.048779  , ...,
+       114502.06960059, 114077.42169854, 114266.38837534])</code></pre>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inefficient resource utilisation - dask introduces too much overhead for simple sizes np handles well</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000_000</span>),chunks <span class="op">=</span> (<span class="dv">1000</span>,))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>x.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>4999875.009376019</code></pre>
+</section>
 <section id="key-points" class="level3 keypoints">
 <h3 class="anchored" data-anchor-id="key-points">Key points</h3>
 <ul>
