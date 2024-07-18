@@ -13,6 +13,8 @@ website:
         text: "Setup"
       - text: "Fundamentals"
         href: notebooks/01a-pandas_fundamentals.html
+      - text: "Polars Dataframes"
+        href: notebooks/polars-intro.html
       - text: "Dask"
         href: notebooks/01b-TransitionToDask.html
       - text: "Scientific Computing"

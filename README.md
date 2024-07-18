@@ -5,17 +5,18 @@ title: "SIH Quarto Training template"
 
 - We recommend storing all notebooks (.ipynb) or R files (as .qmd or .rmd) in the `notebooks` folder.
 
-## How to use
+## How to use this repository
 
-- Copy this repository
+- Clone this repository and `ParallelPython`.
 - Edit `index.qmd` to change the main landing page.
 - Edit or create `setup.qmd` to change the Setup instruction pages.
 - Edit `_quarto.yml` to change the dropdown menu options.
 - Add additional `*.md` files to the root dir to have them converted to html files (and add them to `_quarto.yml` to make them navigable).
 
-- If using Python, use VSCode's [Quarto Extension](https://quarto.org/docs/tools/vscode.html) to render the project (recommended b/c it's easier/nice)
-- If using R, type `quarto render` in the Terminal in RStudio (not the R command line, the Terminal tab!) - or use the buttons
-- If you want to command line, run the below commands (after activating the correct Python environment, if needed) 
+- Download [Quarto](https://quarto.org/. VSCode also has an extension [Quarto Extension](https://quarto.org/docs/tools/vscode.html) to render the training. 
+
+- On the command line after Quarto is installed, type `quarto render`. Afterwhich, `open -a "firefox" docs/index.html` can be run to view the rendered training.
+
 
 ## Note:
 

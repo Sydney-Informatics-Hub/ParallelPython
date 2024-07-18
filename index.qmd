@@ -11,10 +11,10 @@ This course is aimed at researchers, students, and industry professionals who wa
 
 
 ## Trainers
-* Kristian Maras (Kris) (MSc Mathematics / Ba Commerce)
-* Nathaniel (Nate) Butterworth (PhD Computational Geophysics), nathaniel.butterworth@sydney.edu.au
-* Darya Vanichkina (PhD Bioinformatics, SFHEA)
-* Tim White (PhD Physics and Astronomy)
+* Kristian Maras (Kris) (MSc Mathematics / Ba Commerce) 
+* Thomas Mauch (Thomas) (PhD in astronomy)
+* Nathaniel (Nate) Butterworth (PhD Computational Geophysics)
+
 
 
 ## Course pre-requisites and setup requirements
@@ -39,15 +39,13 @@ Our full CoC, with incident reporting guidelines, is available [here](https://sy
 ## General session timings
 
 * A. Intoduction and Revise Python Data Manipulation and Pandas Data Structure
-* B. Dask Fundamentals and application to solving data and computationally bounded bottlenecks.
-* C. Scientific Computing Demonstration 
+* B. Why Polars is a better option for dataframes
+* C. Why Dask provides an ecosystem of tools that can run on clusters of machines.
 
 
 ## Setup Instructions
 
-All content in this course is designed to run on the existing Dask Binder : 
+`conda env create -f environment.yml`
 
-[Dask Binder](https://examples.dask.org/)
-
-Hence no installation steps are needed prior to the course.
+`conda activate parallel`
 

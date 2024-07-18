@@ -12,6 +12,7 @@ dependencies:
   - scipy #mathematical algorithms and convenience functions built on the NumPy extension 
   - seaborn # for charts and visuals. provides datsets to learning
   - pip
+  - polars #more recent alternative to dask dataframes - 
 #  - pip:
 #    - XXX
 
