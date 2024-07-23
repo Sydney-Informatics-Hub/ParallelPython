@@ -7,11 +7,13 @@ output:
 ---
 
 
-# Go to [Dask Binder](https://examples.dask.org/)
+# Go to [Google Colab](https://colab.google/)
 
-Launch the Binder instance at the [Dask Example Page](https://examples.dask.org/) and go from there!
+Launch a "New Notebook"
 
-Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.
+Done. All the required packages should be installed.
+
+If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.
 
 
 # At home setup
@@ -34,6 +36,7 @@ python=3.9.13
 scikit-learn=1.1.2
 scipy=1.9.3
 seaborn=0.12.1
+polars=0.20.2
 ```
 
 Other combinations may also work.
