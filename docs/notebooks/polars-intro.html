@@ -165,8 +165,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#expressions" id="toc-expressions" class="nav-link active" data-scroll-target="#expressions">Expressions</a></li>
   <li><a href="#learning-the-syntax" id="toc-learning-the-syntax" class="nav-link" data-scroll-target="#learning-the-syntax">Learning the Syntax</a>
   <ul class="collapse">
+  <li><a href="#other-info" id="toc-other-info" class="nav-link" data-scroll-target="#other-info">Other info:</a></li>
   <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types">Data types</a></li>
   </ul></li>
+  <li><a href="#lazy-eager-api" id="toc-lazy-eager-api" class="nav-link" data-scroll-target="#lazy-eager-api">Lazy / Eager API</a>
+  <ul class="collapse">
+  <li><a href="#typical-pipeline-demo" id="toc-typical-pipeline-demo" class="nav-link" data-scroll-target="#typical-pipeline-demo">Typical pipeline Demo</a></li>
+  </ul></li>
+  <li><a href="#ecosystem" id="toc-ecosystem" class="nav-link" data-scroll-target="#ecosystem">Ecosystem</a></li>
   </ul>
 </nav>
     </div>
@@ -210,29 +216,30 @@ Out of Core: The streaming API allows you to process your results without requir
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Frames and Series are supported by polars</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.DataFrame(</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"integer"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>],</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"integer"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>,<span class="dv">4</span>],</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"date"</span>: [</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            datetime(<span class="dv">2025</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            datetime(<span class="dv">2025</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            datetime(<span class="dv">2025</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"float"</span>: [<span class="fl">4.0</span>, <span class="fl">5.0</span>, <span class="fl">6.0</span>],</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"string"</span>: [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>],</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Seriers types need to be the same</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>sr <span class="op">=</span> pl.Series([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">500</span>])</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># can specify the data types for better performance</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>sr <span class="op">=</span> pl.Series([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">500</span>],dtype<span class="op">=</span>pl.Int64)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            datetime(<span class="dv">2025</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"float"</span>: [<span class="fl">4.0</span>, <span class="fl">5.0</span>, <span class="fl">6.0</span>,<span class="dv">12</span>],</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"string"</span>: [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>,<span class="st">"b"</span>],</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Seriers types need to be the same</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>sr <span class="op">=</span> pl.Series([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">500</span>])</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># can specify the data types for better performance</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>sr <span class="op">=</span> pl.Series([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">500</span>],dtype<span class="op">=</span>pl.Int64)</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pl.DataFrame(</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: <span class="bu">range</span>(<span class="dv">8</span>),</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: [<span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"X"</span>, <span class="st">"X"</span>],</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pl.DataFrame(</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: <span class="bu">range</span>(<span class="dv">8</span>),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: [<span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"X"</span>, <span class="st">"X"</span>],</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To inspect the data you can use head(),tail(),print()</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sample() to select random rows, and describe() for sumamry statistics</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.describe()</span>
@@ -292,6 +299,7 @@ Out of Core: The streaming API allows you to process your results without requir
 <li><p>automatic <strong>parallelization</strong> of expressions on many columns</p></li>
 </ol>
 <p>For more info and examples on <a href="https://docs.pola.rs/user-guide/expressions/">expressions</a>.</p>
+<p><strong>All expressions are run in parallel, meaning that separate Polars expressions are embarrassingly parallel. Note that within an expression there may be more parallelization going on.</strong></p>
 </section>
 <section id="learning-the-syntax" class="level2">
 <h2 class="anchored" data-anchor-id="learning-the-syntax">Learning the Syntax</h2>
@@ -309,8 +317,10 @@ Out of Core: The streaming API allows you to process your results without requir
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>df.with_columns((pl.col(<span class="st">"integer"</span>) <span class="op">+</span> <span class="dv">3</span>).alias(<span class="st">"new_column"</span>)) <span class="co"># creating column and naming it</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>df2.group_by(<span class="st">"y"</span>).agg(pl.col(<span class="st">"x"</span>).<span class="bu">sum</span>().alias(<span class="st">"sum"</span>), <span class="co">#aggregate after groupby</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                      pl.col(<span class="st">"x"</span>).count().alias(<span class="st">"count"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>df.group_by(<span class="st">"string"</span>).agg(pl.col(<span class="st">"integer"</span>).<span class="bu">sum</span>().alias(<span class="st">"sum"</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                          pl.col(<span class="st">"date"</span>).sort().first().alias(<span class="st">"earliest"</span>), </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                          pl.col(<span class="st">"float"</span>) <span class="op">/</span> pl.col(<span class="st">"integer"</span>)) </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                                </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div><style>
 .dataframe > thead > tr,
 .dataframe > tbody > tr {
@@ -318,64 +328,302 @@ Out of Core: The streaming API allows you to process your results without requir
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (4, 3)</small>
+<small>shape: (3, 4)</small>
 <table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
-<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">string</th>
 <th data-quarto-table-cell-role="th">sum</th>
-<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">earliest</th>
+<th data-quarto-table-cell-role="th">float</th>
 </tr>
 <tr class="odd">
 <th>str</th>
 <th>i64</th>
-<th>u32</th>
+<th>datetime[μs]</th>
+<th>list[f64]</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>"X"</td>
-<td>13</td>
-<td>2</td>
+<td>"a"</td>
+<td>1</td>
+<td>2025-01-01 00:00:00</td>
+<td>[4.0]</td>
 </tr>
 <tr class="even">
-<td>"C"</td>
-<td>5</td>
-<td>1</td>
+<td>"b"</td>
+<td>6</td>
+<td>2025-01-02 00:00:00</td>
+<td>[2.5, 3.0]</td>
 </tr>
 <tr class="odd">
-<td>"A"</td>
+<td>"c"</td>
 <td>3</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>"B"</td>
-<td>7</td>
-<td>2</td>
+<td>2025-01-03 00:00:00</td>
+<td>[2.0]</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>There are many ways to use <a href="https://docs.pola.rs/user-guide/expressions/column-selections/">Select</a></p>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can combine expressions for compactness</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df.with_columns((pl.col(<span class="st">"float"</span>) <span class="op">*</span> pl.col(<span class="st">"integer"</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                .alias(<span class="st">"product"</span>)).select(pl.<span class="bu">all</span>().exclude(<span class="st">"integer"</span>)).select(pl.<span class="bu">all</span>())</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Polars supports the traditional join strategies by the join() method on a dataframe. Specifying the how argument alters the join type. See <a href="https://docs.pola.rs/user-guide/transformations/joins/">here</a> for examples.</p>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can join tables in the usual way. Specific joing expressed via the "how" parameter with inner as default. </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>joined <span class="op">=</span> df.join(df2, left_on<span class="op">=</span><span class="st">"integer"</span>, right_on<span class="op">=</span><span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Can use regular expressions and helper functions to select columns in different ways</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars.selectors <span class="im">as</span> cs</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df.with_columns((pl.col(<span class="st">"float"</span>) <span class="op">*</span> pl.col(<span class="st">"integer"</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                .alias(<span class="st">"product"</span>)).select(pl.<span class="bu">all</span>().exclude(<span class="st">"integer"</span>)).select(cs.contains(<span class="st">"uct"</span>),cs.string())</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 2)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">product</th>
+<th data-quarto-table-cell-role="th">string</th>
+</tr>
+<tr class="odd">
+<th>f64</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>4.0</td>
+<td>"a"</td>
+</tr>
+<tr class="even">
+<td>10.0</td>
+<td>"b"</td>
+</tr>
+<tr class="odd">
+<td>18.0</td>
+<td>"c"</td>
+</tr>
+<tr class="even">
+<td>48.0</td>
+<td>"b"</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="other-info" class="level3">
+<h3 class="anchored" data-anchor-id="other-info">Other info:</h3>
+<p>Polars supports traditional <a href="https://docs.pola.rs/user-guide/transformations/">Data Transformation</a> such as join, Concatenation, pivot and unpivot.</p>
+<p>Polars provides many <a href="https://docs.pola.rs/api/python/stable/reference/expressions/functions.html/">functions for expressions</a>. Check out the <a href="https://docs.pola.rs/api/python/stable/reference/index.html">API documentation</a> for more information</p>
+</section>
 <section id="data-types" class="level3">
 <h3 class="anchored" data-anchor-id="data-types">Data types</h3>
 <p>Under the hood polars use Arrow data types and memory arrays and offer support for String, Numberic, Nested, Temporay and other types. Most data types are specified by the arrow <a href="https://docs.pola.rs/user-guide/concepts/data-types/overview/">syntax</a> with the exception of String, Categorical and Object types.</p>
 <p>Categorical data represents string data where the values in the column have a finite set of values (yet for performance implementation different to strings). Polars supports both <strong>Enum</strong> data type, where categories are known up front, and the more flexible <strong>Categorical</strong> data type where values are not known beforehand. Conversion between them is trivial. Relying on polars inferring the categories with Categorical types comes at a performance cost (as the encoding is a dictionary like object). See <a href="https://docs.pola.rs/user-guide/concepts/data-types/categoricals/#categorical-data-type">Categorical</a> page for more information.</p>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Enum where categories are known</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cat_types <span class="op">=</span> pl.Enum([<span class="st">"polar"</span>,<span class="st">"panda"</span>,<span class="st">"teddy"</span>])</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>animals <span class="op">=</span> pl.Series([<span class="st">"polar"</span>,<span class="st">"polar"</span>,<span class="st">"teddy"</span>,<span class="st">"panda"</span>],dtype<span class="op">=</span> cat_types)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Categprical otherwise</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fictional_animals <span class="op">=</span> pl.Series([<span class="st">"poobear"</span>,<span class="st">"minimouse"</span>,<span class="st">"teddy"</span>,<span class="st">"poobear"</span>],dtype<span class="op">=</span> pl.Categorical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Enum where categories are known</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cat_types <span class="op">=</span> pl.Enum([<span class="st">"polar"</span>,<span class="st">"panda"</span>,<span class="st">"teddy"</span>])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>animals <span class="op">=</span> pl.Series([<span class="st">"polar"</span>,<span class="st">"polar"</span>,<span class="st">"teddy"</span>,<span class="st">"panda"</span>],dtype<span class="op">=</span> cat_types)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Categprical otherwise</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>fictional_animals <span class="op">=</span> pl.Series([<span class="st">"poobear"</span>,<span class="st">"minimouse"</span>,<span class="st">"teddy"</span>,<span class="st">"poobear"</span>],dtype<span class="op">=</span> pl.Categorical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+</section>
+<section id="lazy-eager-api" class="level2">
+<h2 class="anchored" data-anchor-id="lazy-eager-api">Lazy / Eager API</h2>
+<p>Polars supports two modes of operation: lazy and eager. In the eager API the query is executed immediately while in the lazy API the query is only evaluated once it is ‘needed’. Deferring the execution to the last minute can have significant performance advantages.</p>
+<p>Before we explore the two run this code to fetch the iris dataset</p>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fetch iris dataset and save as csv in local path</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucimlrepo <span class="im">import</span> fetch_ucirepo </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>iris <span class="op">=</span> fetch_ucirepo(<span class="bu">id</span><span class="op">=</span><span class="dv">53</span>) </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> iris.data.features </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> iris.data.targets </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>iris_df <span class="op">=</span> pd.concat([X, y], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>iris_df.rename(columns<span class="op">=</span>{<span class="st">'class'</span>: <span class="st">'species'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>iris_df.to_csv(<span class="st">"iris_data.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this example we use the eager API we
+1. Read the iris dataset.
+2. Filter the dataset based on sepal length
+3. Calculate the mean of the sepal width per species</p>
+<p>Every step is executed immediately returning the intermediate results. This can be very wasteful as we might do work or load extra data that is not being used.</p>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.read_csv(<span class="st">"iris_data.csv"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_small <span class="op">=</span> df.<span class="bu">filter</span>(pl.col(<span class="st">"sepal length"</span>) <span class="op">&gt;</span> <span class="dv">5</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_agg <span class="op">=</span> df_small.group_by(<span class="st">"species"</span>).agg(pl.col(<span class="st">"sepal width"</span>).mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If we instead used the lazy API and waited on execution until all the steps are defined then the query planner could perform various optimizations. In this case:</p>
+<ol type="1">
+<li><p>Predicate pushdown: Apply filters as early as possible while reading the dataset, thus only reading rows with sepal length greater than 5.</p></li>
+<li><p>Projection pushdown: Select only the columns that are needed while reading the dataset, thus removing the need to load additional columns (e.g.&nbsp;petal length &amp; petal width)</p></li>
+</ol>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    pl.scan_csv(<span class="st">"iris_data.csv"</span>) <span class="co">#doesnt read it all before other operation is performed</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">filter</span>(pl.col(<span class="st">"sepal length"</span>) <span class="op">&gt;</span> <span class="dv">5</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        .group_by(<span class="st">"species"</span>).agg(pl.col(<span class="st">"sepal width"</span>).mean())</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>q <span class="co"># a lazyframe</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>df_agg <span class="op">=</span> q.collect() <span class="co"># inform polars that you want to execute the query</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>One additional benefit of the lazy API is that it allows queries to be executed in a streaming manner. Instead of processing the data all-at-once Polars can execute the query in batches allowing you to process datasets that are larger-than-memory. To tell Polars we want to execute a query in streaming mode we pass the streaming=True argument to collect.</p>
+<p>When to use Lazy versus Eager:</p>
+<p>In general the lazy API should be preferred unless you are either interested in the intermediate results or are doing exploratory work and don’t know yet what your query is going to look like</p>
+<section id="typical-pipeline-demo" class="level3">
+<h3 class="anchored" data-anchor-id="typical-pipeline-demo">Typical pipeline Demo</h3>
+<p>Given your new knowledge of polars, here is an example on how to integrate into the usual pipeline consisting of:</p>
+<ol type="1">
+<li><p>Data ingestion and manipulation.</p></li>
+<li><p>Data visualization</p></li>
+<li><p>Model Preperation - Training and Testing</p></li>
+<li><p>Prediction</p></li>
+</ol>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Do you aggregating and manipulation to clean data</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># keep "as lazy" as possible</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> (</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    pl.scan_csv(<span class="st">"iris_data.csv"</span>) <span class="co"># data manipulation stuff - trivial example</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">filter</span>(pl.col(<span class="st">"sepal length"</span>) <span class="op">&gt;</span> <span class="dv">2</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>iris_df <span class="op">=</span> q.collect() <span class="co">#trigger computation on and store the polars dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="ecosystem" class="level2">
+<h2 class="anchored" data-anchor-id="ecosystem">Ecosystem</h2>
+<p>On <a href="https://docs.pola.rs/user-guide/ecosystem/#key-features">this</a> page you can find a non-exhaustive list of libraries and tools that support Polars. As the data ecosystem is evolving fast, more libraries will likely support Polars in the future. One of the main drivers is that Polars makes adheres its memory layout to the Apache Arrow spec.</p>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Polars dataframs has kMachine learning </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example preprocessing with Polars: Adding a new feature</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>iris_df <span class="op">=</span> df.with_columns(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    (df[<span class="st">'sepal length'</span>] <span class="op">*</span> df[<span class="st">'sepal width'</span>]).alias(<span class="st">'sepal area'</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate features and target for scikit-learn</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> iris_df.select([<span class="st">'sepal length'</span>, <span class="st">'sepal width'</span>, <span class="st">'petal length'</span>, <span class="st">'petal width'</span>, <span class="st">'sepal area'</span>])</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> iris_df.select(<span class="st">'species'</span>).to_series()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Possible demo in  either using scikit-learn or an easier ML package to do classification</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Tom.M</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>iris_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (150, 6)</small>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">sepal length</th>
+<th data-quarto-table-cell-role="th">sepal width</th>
+<th data-quarto-table-cell-role="th">petal length</th>
+<th data-quarto-table-cell-role="th">petal width</th>
+<th data-quarto-table-cell-role="th">species</th>
+<th data-quarto-table-cell-role="th">sepal area</th>
+</tr>
+<tr class="odd">
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+<th>f64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>"Iris-setosa"</td>
+<td>17.85</td>
+</tr>
+<tr class="even">
+<td>4.9</td>
+<td>3.0</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>"Iris-setosa"</td>
+<td>14.7</td>
+</tr>
+<tr class="odd">
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>"Iris-setosa"</td>
+<td>15.04</td>
+</tr>
+<tr class="even">
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>"Iris-setosa"</td>
+<td>14.26</td>
+</tr>
+<tr class="odd">
+<td>5.0</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>"Iris-setosa"</td>
+<td>18.0</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>6.7</td>
+<td>3.0</td>
+<td>5.2</td>
+<td>2.3</td>
+<td>"Iris-virginica"</td>
+<td>20.1</td>
+</tr>
+<tr class="even">
+<td>6.3</td>
+<td>2.5</td>
+<td>5.0</td>
+<td>1.9</td>
+<td>"Iris-virginica"</td>
+<td>15.75</td>
+</tr>
+<tr class="odd">
+<td>6.5</td>
+<td>3.0</td>
+<td>5.2</td>
+<td>2.0</td>
+<td>"Iris-virginica"</td>
+<td>19.5</td>
+</tr>
+<tr class="even">
+<td>6.2</td>
+<td>3.4</td>
+<td>5.4</td>
+<td>2.3</td>
+<td>"Iris-virginica"</td>
+<td>21.08</td>
+</tr>
+<tr class="odd">
+<td>5.9</td>
+<td>3.0</td>
+<td>5.1</td>
+<td>1.8</td>
+<td>"Iris-virginica"</td>
+<td>17.7</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->

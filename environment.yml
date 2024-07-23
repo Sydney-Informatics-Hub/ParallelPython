@@ -13,7 +13,7 @@ dependencies:
   - seaborn # for charts and visuals. provides datsets to learning
   - pip
   - polars #more recent alternative to dask dataframes - 
-#  - pip:
-#    - XXX
-
-
+  - scikit-learn # machine learning possible demo
+  - pycaret # maybe use (maybe not)
+  - pip:
+    - ucimlrepo
