@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#learning-the-syntax" id="toc-learning-the-syntax" class="nav-link" data-scroll-target="#learning-the-syntax">Learning the Syntax</a>
   <ul class="collapse">
   <li><a href="#for-more-information-here-are-some-links-to-relevant-documentation" id="toc-for-more-information-here-are-some-links-to-relevant-documentation" class="nav-link" data-scroll-target="#for-more-information-here-are-some-links-to-relevant-documentation">For more information here are some links to relevant documentation:</a></li>
-  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types">Data types</a></li>
+  <li><a href="#data-types-and-casting" id="toc-data-types-and-casting" class="nav-link" data-scroll-target="#data-types-and-casting">Data types and casting</a></li>
   </ul></li>
   <li><a href="#lazy-eager-api" id="toc-lazy-eager-api" class="nav-link" data-scroll-target="#lazy-eager-api">Lazy / Eager API</a>
   <ul class="collapse">
@@ -294,7 +294,10 @@ Out of Core: The streaming API allows you to process your results without requir
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df.write_parquet(<span class="st">"output.parquet"</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># reading back into a polars dataframe</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>new_df <span class="op">=</span> pl.read_csv(<span class="st">"output.csv"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>new_df <span class="op">=</span> pl.read_parquet(<span class="st">"output.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>new_df <span class="op">=</span> pl.read_parquet(<span class="st">"output.parquet"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># can convert back to pandas dataframe (or other types)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df.to_pandas() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="learning-the-syntax" class="level2">
 <h2 class="anchored" data-anchor-id="learning-the-syntax">Learning the Syntax</h2>
@@ -320,7 +323,7 @@ Out of Core: The streaming API allows you to process your results without requir
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#creating / manipulating columns -----------------------------------------------------</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>df.with_columns((pl.col(<span class="st">"integer"</span>) <span class="op">+</span> <span class="dv">3</span>).alias(<span class="st">"new_column"</span>)) <span class="co"># creating column and naming it</span></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#group by aggregations --------------------------------------------------------</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#group by aggregations ----------------------------------------------------------------</span></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>df.group_by(<span class="st">"string"</span>).agg(pl.col(<span class="st">"integer"</span>).<span class="bu">sum</span>().alias(<span class="st">"sum"</span>),</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                          pl.col(<span class="st">"date"</span>).sort().first().alias(<span class="st">"earliest"</span>), </span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                          pl.col(<span class="st">"float"</span>) <span class="op">/</span> pl.col(<span class="st">"integer"</span>)) </span>
@@ -382,15 +385,19 @@ Out of Core: The streaming API allows you to process your results without requir
 <p><a href="https://docs.pola.rs/api/python/stable/reference/expressions/functions.html/">Functions for expressions</a>.</p>
 <p>Check out the <a href="https://docs.pola.rs/api/python/stable/reference/index.html">API documentation</a> for more information</p>
 </section>
-<section id="data-types" class="level3">
-<h3 class="anchored" data-anchor-id="data-types">Data types</h3>
-<p>Under the hood polars use Arrow data types and memory arrays and offer support for String, Numberic, Nested, Temporay and other types. Most data types are specified by the arrow <a href="https://docs.pola.rs/user-guide/concepts/data-types/overview/">syntax</a> with the exception of String, Categorical and Object types.</p>
+<section id="data-types-and-casting" class="level3">
+<h3 class="anchored" data-anchor-id="data-types-and-casting">Data types and casting</h3>
+<p>Under the hood polars use Arrow data types and memory arrays and offer support for String, Numberic, Nested, Temporay and other types. Most <a href="https://docs.pola.rs/user-guide/concepts/data-types/overview/">data types</a> are specified by the arrow syntax with the exception of String, Categorical and Object types.</p>
 <p>Categorical data represents string data where the values in the column have a finite set of values (yet for performance implementation different to strings). Polars supports both <strong>Enum</strong> data type, where categories are known up front, and the more flexible <strong>Categorical</strong> data type where values are not known beforehand. Conversion between them is trivial. Relying on polars inferring the categories with Categorical types comes at a performance cost (as the encoding is a dictionary like object). See <a href="https://docs.pola.rs/user-guide/concepts/data-types/categoricals/#categorical-data-type">Categorical</a> page for more information.</p>
+<p>Casting (changing the datatypes) is enabled by either specifying the dtype argument or applying the cast() function.</p>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Enum where categories are known</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cat_types <span class="op">=</span> pl.Enum([<span class="st">"polar"</span>,<span class="st">"panda"</span>,<span class="st">"teddy"</span>])</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>animals <span class="op">=</span> pl.Series([<span class="st">"polar"</span>,<span class="st">"polar"</span>,<span class="st">"teddy"</span>,<span class="st">"panda"</span>],dtype<span class="op">=</span> cat_types)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Categprical otherwise</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fictional_animals <span class="op">=</span> pl.Series([<span class="st">"poobear"</span>,<span class="st">"minimouse"</span>,<span class="st">"teddy"</span>,<span class="st">"poobear"</span>],dtype<span class="op">=</span> pl.Categorical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fictional_animals <span class="op">=</span> pl.Series([<span class="st">"poobear"</span>,<span class="st">"minimouse"</span>,<span class="st">"teddy"</span>,<span class="st">"poobear"</span>],dtype<span class="op">=</span> pl.Categorical)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># casting columns to other data types with cast</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df.cast({<span class="st">"integer"</span>: pl.Float32, <span class="st">"float"</span>: pl.UInt8})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="lazy-eager-api" class="level2">
@@ -427,9 +434,12 @@ Out of Core: The streaming API allows you to process your results without requir
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>q <span class="co"># a lazyframe</span></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>df_agg <span class="op">=</span> q.collect() <span class="co"># inform polars that you want to execute the query</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>One additional benefit of the lazy API is that it allows queries to be executed in a streaming manner. Instead of processing the data all-at-once Polars can execute the query in batches allowing you to process datasets that are larger-than-memory. To tell Polars we want to execute a query in streaming mode we pass the streaming=True argument to collect.</p>
-<p>When to use Lazy versus Eager:</p>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>df_agg <span class="op">=</span> q.collect() <span class="co"># inform polars that you want to execute the query</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>df_agg <span class="op">=</span> q.collect(streaming<span class="op">=</span><span class="va">True</span>) <span class="co"># with streaming mode</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Streaming</strong></p>
+<p>One additional benefit of the lazy API is that it allows queries to be executed in a streaming manner. Instead of processing the data all-at-once Polars can execute the query in batches allowing you to process datasets that are larger-than-memory.</p>
+<p>To tell Polars we want to execute a query in streaming mode we pass the streaming=True argument to collect. See <a href="https://docs.pola.rs/user-guide/concepts/streaming/#when-is-streaming-available">here</a> for more info on streaming.</p>
+<p><strong>When to use Lazy versus Eager</strong>:</p>
 <p>In general the lazy API should be preferred unless you are either interested in the intermediate results or are doing exploratory work and don’t know yet what your query is going to look like</p>
 <section id="typical-pipeline-demo" class="level3">
 <h3 class="anchored" data-anchor-id="typical-pipeline-demo">Typical pipeline Demo</h3>
