@@ -7,10 +7,9 @@ output:
 ---
 
 
-# Go to [Dask Binder](https://examples.dask.org/)
+# Go to [Google Colab](https://colab.research.google.com/)
 
-Launch the Binder instance at the [Dask Example Page](https://examples.dask.org/) and go from there!
-
+Sign in to google if you are not already. Launch "File > New Notebook in Drive". 
 Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.
 
 
@@ -19,7 +18,13 @@ Done. If you would prefer to have a local version of the Python environment we a
 To complete the exercises presented in the workshop, you may create a Python environment with the following packages:
 
 ```sh
-conda create -n quantum python=3.9 numpy scipy pandas scikit-learn seaborn dask jupyterlab -c conda-forge
+git clone https://github.com/Sydney-Informatics-Hub/ParallelPython.git
+
+cd ParallelPython
+
+conda env create -f environment.yml
+
+conda activate parallel
 ```
 
 At the time of this workshop, the major package versions were:

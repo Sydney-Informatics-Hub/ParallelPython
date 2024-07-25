@@ -159,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#go-to-dask-binder" id="toc-go-to-dask-binder" class="nav-link active" data-scroll-target="#go-to-dask-binder">Go to Dask Binder</a></li>
+  <li><a href="#go-to-google-colab" id="toc-go-to-google-colab" class="nav-link active" data-scroll-target="#go-to-google-colab">Go to Google Colab</a></li>
   <li><a href="#at-home-setup" id="toc-at-home-setup" class="nav-link" data-scroll-target="#at-home-setup">At home setup</a></li>
   </ul>
 </nav>
@@ -184,15 +184,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="go-to-dask-binder" class="level1">
-<h1>Go to <a href="https://examples.dask.org/">Dask Binder</a></h1>
-<p>Launch the Binder instance at the <a href="https://examples.dask.org/">Dask Example Page</a> and go from there!</p>
-<p>Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.</p>
+<section id="go-to-google-colab" class="level1">
+<h1>Go to <a href="https://colab.research.google.com/">Google Colab</a></h1>
+<p>Sign in to google if you are not already. Launch “File &gt; New Notebook in Drive”.
+Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.</p>
 </section>
 <section id="at-home-setup" class="level1">
 <h1>At home setup</h1>
 <p>To complete the exercises presented in the workshop, you may create a Python environment with the following packages:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> quantum python=3.9 numpy scipy pandas scikit-learn seaborn dask jupyterlab <span class="at">-c</span> conda-forge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/Sydney-Informatics-Hub/ParallelPython.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ParallelPython</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate parallel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>At the time of this workshop, the major package versions were:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dask=2022.10.0</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>jupyterlab=3.4.8</span>

@@ -168,12 +168,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge">Challenge</a></li>
   </ul></li>
   <li><a href="#dask-best-practice-guide" id="toc-dask-best-practice-guide" class="nav-link" data-scroll-target="#dask-best-practice-guide">Dask Best Practice Guide</a></li>
-  <li><a href="#using-external-functions-in-dask" id="toc-using-external-functions-in-dask" class="nav-link" data-scroll-target="#using-external-functions-in-dask">Using external functions in Dask</a></li>
-  <li><a href="#dataframes-reading-in-messy-data" id="toc-dataframes-reading-in-messy-data" class="nav-link" data-scroll-target="#dataframes-reading-in-messy-data">DataFrames: Reading in messy data</a></li>
-  <li><a href="#dask-arrays" id="toc-dask-arrays" class="nav-link" data-scroll-target="#dask-arrays">Dask Arrays</a>
-  <ul class="collapse">
-  <li><a href="#more-more-info-on-arrays---go-through-tutorial-on" id="toc-more-more-info-on-arrays---go-through-tutorial-on" class="nav-link" data-scroll-target="#more-more-info-on-arrays---go-through-tutorial-on">More more info on arrays - Go through tutorial on</a></li>
-  </ul></li>
+  <li><a href="#additional-info-on-dask-dataframes" id="toc-additional-info-on-dask-dataframes" class="nav-link" data-scroll-target="#additional-info-on-dask-dataframes">Additional Info on Dask DataFrames</a></li>
+  <li><a href="#dask-arrays" id="toc-dask-arrays" class="nav-link" data-scroll-target="#dask-arrays">Dask Arrays</a></li>
   <li><a href="#diagnostics---profile-resource-efficiency-in-real-time" id="toc-diagnostics---profile-resource-efficiency-in-real-time" class="nav-link" data-scroll-target="#diagnostics---profile-resource-efficiency-in-real-time">Diagnostics - Profile resource efficiency in real time</a>
   <ul class="collapse">
   <li><a href="#cluster-info" id="toc-cluster-info" class="nav-link" data-scroll-target="#cluster-info">Cluster Info</a></li>
@@ -451,38 +447,15 @@ Solution
 <li><strong>Consider storing large data in <a href="https://parquet.apache.org/">Apache Parquet</a> Format</strong> (binary column based format)</li>
 </ol>
 </section>
-<section id="using-external-functions-in-dask" class="level2">
-<h2 class="anchored" data-anchor-id="using-external-functions-in-dask">Using external functions in Dask</h2>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(partition):</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> <span class="bu">len</span>(partition):</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    est <span class="op">=</span> LinearRegression()</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    est.fit(partition[[<span class="st">"x"</span>]].values, partition.y.values)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> est</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">The meta argument tells Dask how to create the DataFrame or Series that will hold the result of .apply(). </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">In this case, train() returns a single value, so .apply() will create a Series. </span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">This means we need to tell Dask what the type of that single column should be and optionally give it a name.</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> ts_subset.groupby(<span class="st">"name"</span>).<span class="bu">apply</span>(</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    train, meta<span class="op">=</span>(<span class="st">"LinearRegression"</span>, <span class="bu">object</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>).compute()</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"Bob"</span>] <span class="co"># linear model of a particular group</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
-</section>
-<section id="dataframes-reading-in-messy-data" class="level2">
-<h2 class="anchored" data-anchor-id="dataframes-reading-in-messy-data">DataFrames: Reading in messy data</h2>
-<p>To learn more on how to use dask dataframes, feel free to go through <a href="https://examples.dask.org/dataframes/04-reading-messy-data-into-dataframes.html">Reading Messy Data Binder</a> at your own pace.This example demostrates both dask and using delayed functions.</p>
+<section id="additional-info-on-dask-dataframes" class="level2">
+<h2 class="anchored" data-anchor-id="additional-info-on-dask-dataframes">Additional Info on Dask DataFrames</h2>
+<p>To learn more on how to use dask dataframes, feel free to go through <a href="https://examples.dask.org/dataframes/04-reading-messy-data-into-dataframes.html">Reading Messy Data Binder</a> at your own pace.This example demostrates both dask and using delayed functions. Otherwise <a href="https://docs.dask.org/en/stable/dataframe.html#">here</a> is more info including best practices and the API, and other <a href="https://tutorial.dask.org/">tutorials</a> on dask is also available.</p>
 </section>
 <section id="dask-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="dask-arrays">Dask Arrays</h2>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table data-quarto-postprocess="true" class="table">
 <colgroup>
 <col style="width: 50%">
@@ -525,11 +498,11 @@ Solution
 </tr>
 </tbody>
 </table>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numpy syntax as usual</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> x.T</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> y[::<span class="dv">2</span>, <span class="dv">5000</span>:].mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="co"># axis 0 is index, axis 1 is columns</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>z</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger compute and investigate Client</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numpy syntax as usual</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">+</span> x.T</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> y[::<span class="dv">2</span>, <span class="dv">5000</span>:].mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="co"># axis 0 is index, axis 1 is columns</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger compute and investigate Client</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table data-quarto-postprocess="true" class="table">
 <colgroup>
 <col style="width: 50%">
@@ -572,15 +545,11 @@ Solution
 </tr>
 </tbody>
 </table>
-<section id="more-more-info-on-arrays---go-through-tutorial-on" class="level3">
-<h3 class="anchored" data-anchor-id="more-more-info-on-arrays---go-through-tutorial-on">More more info on arrays - Go through tutorial on</h3>
-<p>https://tutorial.dask.org/</p>
-</section>
 </section>
 <section id="diagnostics---profile-resource-efficiency-in-real-time" class="level2">
 <h2 class="anchored" data-anchor-id="diagnostics---profile-resource-efficiency-in-real-time">Diagnostics - Profile resource efficiency in real time</h2>
-<p>The Dask Dashboard enables resource monitoring across RAM, CPU, workers, threads and tasks (functions).</p>
-<p><a href="https://docs.dask.org/en/stable/dashboard.html">https://docs.dask.org/en/stable/dashboard.html</a></p>
+<p>The Dask Dashboard enables resource monitoring across RAM, CPU, workers, threads and tasks (functions), in real time as your code is running. It opens a user friendly dashboard allowing you to inspect what processes are running and what work (or bottlenecks) exist across your cores.</p>
+<p><a href="https://docs.dask.org/en/stable/dashboard.html">See here</a> for documentation and videos.</p>
 <section id="a-few-key-definitions" class="level4">
 <h4 class="anchored">A few key definitions:</h4>
 <ul>
@@ -598,15 +567,15 @@ Solution
 <li>White colour represents deadtime.</li>
 </ul></li>
 </ul>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To load diagnostic in web browser on local</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> Client</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> Client()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>client <span class="co">#client.shutdown after use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To load diagnostic in web browser on local. Wont work on CoLab.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> Client</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> Client()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>client <span class="co">#client.shutdown after use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div>
     <div style="width: 24px; height: 24px; background-color: #e1e1e1; border: 3px solid #9D9D9D; border-radius: 5px; position: absolute;"> </div>
     <div style="margin-left: 48px;">
         <h3 style="margin-bottom: 0px;" class="anchored" data-anchor-id="a-few-key-definitions">Client</h3>
-        <p style="color: #9D9D9D; margin-bottom: 0px;">Client-c7757bc6-5514-11ed-ba5c-fe453513c75b</p>
+        <p style="color: #9D9D9D; margin-bottom: 0px;">Client-a102ceae-4a3f-11ef-890e-d687d7367289</p>
         
 <table data-quarto-postprocess="true" class="table">
 <tbody>
@@ -630,7 +599,7 @@ Solution
 <div style="margin-left: 48px;">
 <section id="localcluster" class="level3" style="margin-bottom: 0px; margin-top: 0px;">
 <h3 style="margin-bottom: 0px; margin-top: 0px;" class="anchored" data-anchor-id="localcluster">LocalCluster</h3>
-<p>28e449c4</p>
+<p>40a61b40</p>
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
@@ -657,11 +626,11 @@ Solution
 </div>
 <section id="scheduler" class="level3" style="margin-left: 48px;">
 <h3 style="margin-bottom: 0px;" class="anchored" data-anchor-id="scheduler">Scheduler</h3>
-<p>Scheduler-00cc99f1-ae30-4653-a674-8f38139fd85b</p>
+<p>Scheduler-bd6ab190-cc77-4a45-9877-db3c9fae6eb1</p>
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:63334</td>
+<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:50944</td>
 <td style="text-align: left;"><strong>Workers:</strong> 5</td>
 </tr>
 <tr class="even">
@@ -687,19 +656,19 @@ Solution
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:63357</td>
+<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:50960</td>
 <td style="text-align: left;"><strong>Total threads:</strong> 2</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:63364/status" target="_blank">http://127.0.0.1:63364/status</a></td>
+<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:50967/status" target="_blank">http://127.0.0.1:50967/status</a></td>
 <td style="text-align: left;"><strong>Memory:</strong> 6.40 GiB</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:63337</td>
+<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:50947</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr class="even">
-<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-0x5qvryt</td>
+<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-scratch-space/worker-41zn61zx</td>
 </tr>
 </tbody>
 </table>
@@ -714,19 +683,19 @@ Solution
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:63355</td>
+<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:50963</td>
 <td style="text-align: left;"><strong>Total threads:</strong> 2</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:63362/status" target="_blank">http://127.0.0.1:63362/status</a></td>
+<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:50968/status" target="_blank">http://127.0.0.1:50968/status</a></td>
 <td style="text-align: left;"><strong>Memory:</strong> 6.40 GiB</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:63340</td>
+<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:50948</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr class="even">
-<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-0s__jczq</td>
+<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-scratch-space/worker-91692av2</td>
 </tr>
 </tbody>
 </table>
@@ -741,19 +710,19 @@ Solution
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:63358</td>
+<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:50961</td>
 <td style="text-align: left;"><strong>Total threads:</strong> 2</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:63360/status" target="_blank">http://127.0.0.1:63360/status</a></td>
+<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:50964/status" target="_blank">http://127.0.0.1:50964/status</a></td>
 <td style="text-align: left;"><strong>Memory:</strong> 6.40 GiB</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:63338</td>
+<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:50949</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr class="even">
-<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-mnj91k25</td>
+<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-scratch-space/worker-kvhj80x5</td>
 </tr>
 </tbody>
 </table>
@@ -768,19 +737,19 @@ Solution
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:63356</td>
+<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:50959</td>
 <td style="text-align: left;"><strong>Total threads:</strong> 2</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:63361/status" target="_blank">http://127.0.0.1:63361/status</a></td>
+<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:50966/status" target="_blank">http://127.0.0.1:50966/status</a></td>
 <td style="text-align: left;"><strong>Memory:</strong> 6.40 GiB</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:63341</td>
+<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:50950</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr class="even">
-<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-nvggbtok</td>
+<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-scratch-space/worker-k75empbg</td>
 </tr>
 </tbody>
 </table>
@@ -795,19 +764,19 @@ Solution
 <table data-quarto-postprocess="true" class="table">
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:63359</td>
+<td style="text-align: left;"><strong>Comm:</strong> tcp://127.0.0.1:50962</td>
 <td style="text-align: left;"><strong>Total threads:</strong> 2</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:63363/status" target="_blank">http://127.0.0.1:63363/status</a></td>
+<td style="text-align: left;"><strong>Dashboard:</strong> <a href="http://127.0.0.1:50965/status" target="_blank">http://127.0.0.1:50965/status</a></td>
 <td style="text-align: left;"><strong>Memory:</strong> 6.40 GiB</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:63339</td>
+<td style="text-align: left;"><strong>Nanny:</strong> tcp://127.0.0.1:50951</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr class="even">
-<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/1b/_jymrbj17cz6t7cxdl86xshh0000gr/T/dask-worker-space/worker-sgo11i0u</td>
+<td colspan="2" style="text-align: left;"><strong>Local directory:</strong> /var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/dask-scratch-space/worker-q_dwp3u5</td>
 </tr>
 </tbody>
 </table>
@@ -835,25 +804,31 @@ Solution
 
     
 
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of efficient resource utilisation</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (da.arcsin(x) <span class="op">+</span> da.arcsin(y)).<span class="bu">sum</span>(axis <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>z.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>array([114139.43869439, 114133.41973571, 114035.048779  , ...,
-       114502.06960059, 114077.42169854, 114266.38837534])</code></pre>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inefficient resource utilisation - dask introduces too much overhead for simple sizes np handles well</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000_000</span>),chunks <span class="op">=</span> (<span class="dv">1000</span>,))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>4999875.009376019</code></pre>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of efficient resource utilisation</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000</span>,<span class="dv">10_000</span>,<span class="dv">10</span>), chunks<span class="op">=</span> (<span class="dv">1000</span>,<span class="dv">1000</span>,<span class="dv">5</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (da.arcsin(x) <span class="op">+</span> da.arcsin(y)).<span class="bu">sum</span>(axis <span class="op">=</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>z.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>array([114179.04304005, 114206.99042435, 114061.88890567, ...,
+       113996.60327348, 114431.72344464, 114155.54633761])</code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inefficient resource utilisation - dask introduces too much overhead for simple sizes np handles well</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> da.random.random(size <span class="op">=</span> (<span class="dv">10_000_000</span>),chunks <span class="op">=</span> (<span class="dv">1000</span>,))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>x.<span class="bu">sum</span>().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>/Users/kris/miniconda3/envs/parallel/lib/python3.9/site-packages/distributed/client.py:3357: UserWarning: Sending large graph of size 25.26 MiB.
+This may cause some slowdown.
+Consider scattering data ahead of time and using futures.
+  warnings.warn(</code></pre>
+<pre><code>5000858.565339783</code></pre>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>client.shutdown</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>&lt;bound method Client.shutdown of &lt;Client: 'tcp://127.0.0.1:50944' processes=5 threads=10, memory=32.00 GiB&gt;&gt;</code></pre>
 
 <section id="key-points" class="level3 keypoints">
 <h3 data-anchor-id="key-points">Key points</h3>
 <ul>
-<li>The similarity-by-design of the Dask API with pandas makes the transition easy compared to alternatives - although not all functions are replicated.</li>
-<li>Scaling up to distributed systems, or down to simply running on your laptop, makes code easily transferable between different resources.</li>
-<li>Dask enables parallelism without low level alterations in code.</li>
+<li><p>The similarity-by-design of the Dask API with pandas makes the transition easy compared to alternatives - although not all functions are replicated.</p></li>
+<li><p>Scaling up to distributed systems, or down to simply running on your laptop, makes code easily transferable between different resources.</p></li>
+<li><p>Dask enables parallelism without low level alterations in code.</p></li>
 </ul>
 </section>
 
