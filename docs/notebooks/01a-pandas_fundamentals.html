@@ -166,6 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#what-is-parallel---why-is-python-slow-sometimes" id="toc-what-is-parallel---why-is-python-slow-sometimes" class="nav-link" data-scroll-target="#what-is-parallel---why-is-python-slow-sometimes">What is Parallel - Why is python slow (sometimes)</a></li>
   <li><a href="#pandas-dataframes---recap-the-staple-of-python-data-manipulation" id="toc-pandas-dataframes---recap-the-staple-of-python-data-manipulation" class="nav-link" data-scroll-target="#pandas-dataframes---recap-the-staple-of-python-data-manipulation">Pandas Dataframes - Recap The Staple of Python data manipulation</a></li>
   <li><a href="#dataframe-functions" id="toc-dataframe-functions" class="nav-link" data-scroll-target="#dataframe-functions">DataFrame Functions</a></li>
+  <li><a href="#typical-workflow---reading-manipulating-and-plotting" id="toc-typical-workflow---reading-manipulating-and-plotting" class="nav-link" data-scroll-target="#typical-workflow---reading-manipulating-and-plotting">Typical workflow - Reading, Manipulating and Plotting</a></li>
   <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge">Challenge</a></li>
   <li><a href="#aside---generators-may-be-helpful-for-functions-you-define-yourself" id="toc-aside---generators-may-be-helpful-for-functions-you-define-yourself" class="nav-link" data-scroll-target="#aside---generators-may-be-helpful-for-functions-you-define-yourself">Aside - Generators may be helpful for functions you define yourself</a></li>
   <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key points</a></li>
@@ -228,13 +229,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ts_data <span class="op">=</span> dask.datasets.timeseries()</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> sns.load_dataset(<span class="st">'diamonds'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#load the data</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> sns.load_dataset(<span class="st">'diamonds'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'diamonds.csv'</span>)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df.head() <span class="co">#inspect DataFrame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>/Users/kris/miniconda3/envs/parallel/lib/python3.9/site-packages/dask_expr/_collection.py:5968: UserWarning: dask_expr does not support the DataFrameIOFunction protocol for column projection. To enable column projection, please ensure that the signature of `func` includes a `columns=` keyword argument instead.
-  warnings.warn(</code></pre>
 <div>
 
 
@@ -330,130 +329,203 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Functions are available that are attached to the DataFrame class
 Common methods are:</p>
 <ul>
-<li><strong>filter</strong>: Subset the dataframe rows or columns according to the specified index labels.</li>
+<li><strong>filter</strong>: Subset the dataframe columns or rows according to the specified index labels.</li>
 <li><strong>assign</strong>: assign / mutate new columns in dataframe</li>
 <li><strong>query</strong>: query the columns of a DataFrame with a boolean expression</li>
-<li><strong>sort_values</strong> : arrange rows of DataFrame</li>
+<li><strong>groupby</strong> : group dataframe into sections, usually followed by aggregations</li>
 <li><strong>apply</strong> : Apply a function along an axis of the DataFrame</li>
 </ul>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A whole bunch of stuff - recap on pandas</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># DataFrame attributes can be accessed</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df.index <span class="co"># name of index, in this case a range</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df.columns <span class="co"># variables carat to z</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>df.values <span class="co"># values as a numpy.ndarray</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>df.dtypes <span class="co"># data types of variables</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df.shape <span class="co"># rows to column structure</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>df.ndim <span class="co"># number of dimensions</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># functions are attached to pd.Series can be engaged</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>df.cut    <span class="co"># referenced column on its own</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>df.cut.value_counts()   </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>df.cut.unique()</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>df.carat.mean()</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># filter variables</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="st">'cut'</span>]) <span class="co"># returns pandas.DataFrame</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'cut'</span>] <span class="co"># as opposed to this which returns pandas.Series or df.cut</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="st">"carat"</span>,<span class="st">"cut"</span>]) <span class="co"># filter more than one variables </span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>(regex<span class="op">=</span>  <span class="st">"^c"</span>) <span class="co"># with regex - a whole other topic...</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># query observations</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># The quotes in query need to be single-outside, double-inside </span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'color == "E"'</span>) <span class="co"># filter observations by criteria</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'cut == "Ideal" or cut == "Premium"'</span>) <span class="co"># filter observations with logical expression</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'cut == "Ideal" | cut == "Premium"'</span>)  <span class="co"># same thing</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">"cut.str.match('^G')"</span>) <span class="co"># query doesn't have regex parameter but can be incorporated via str attribute</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">"clarity.str.contains('^\w+1')"</span>)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'price &gt; 500'</span>) <span class="co"># querying numeric</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># other ways to filter variables or observations by string exist</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>subset <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns.<span class="bu">str</span>.contains(<span class="st">'c'</span>)] <span class="co"># list comprehension returning list of booleans</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>(df.columns[subset]) <span class="co"># which are tweaked to filter command</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>df[df.cut.<span class="bu">str</span>.startswith(<span class="st">'Good'</span>)] <span class="co"># subsetting observations </span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># most DataFrame functions return a DataFrame so one can combine different DataFrame operations</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'price &lt; 500'</span>).head() </span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co"># chaining manipulations into larger readable structure</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>(df</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>([<span class="st">'carat'</span>, <span class="st">'color'</span>])</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a> .query(<span class="st">'color == "E"'</span>)</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a> .head(<span class="dv">3</span>))</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># or using functions applied after a chain</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>(df</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    .query(<span class="st">'price &lt; 4000'</span>)</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    .price.std())</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co"># While we've only so far looked at functions attached to pd.Dataframe,</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># one can use external functions provided what it expects is catered for.</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>np.linalg.norm(df.<span class="bu">filter</span>([<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>]).values) <span class="co"># norm expects an array</span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co"># arrange data by values</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>df.sort_values(by <span class="op">=</span> [<span class="st">'carat'</span>,<span class="st">'price'</span>],ascending <span class="op">=</span> <span class="va">False</span>)</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co"># groupby: splits DataFrame into multiple compartments and returns a group-by object</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co"># which aggregations can be applied on each group</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'cut'</span>).price.agg(<span class="st">'std'</span>)</span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'cut'</span>).mean(numeric_only<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Using assign to create / mutate a variable</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>df.assign(size <span class="op">=</span> <span class="dv">1</span>) <span class="co">#fills same value</span></span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.assign(size <span class="op">=</span> np.sqrt(df.x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> df.y <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> df.z <span class="op">**</span> <span class="dv">2</span>)) <span class="co">#element wise vector addition</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="co"># apply : apply a function to a DataFrame over columns (axis = 1) or rows (axis = 0) </span></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>df.assign(norm <span class="op">=</span> df.<span class="bu">filter</span>([<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>]).<span class="bu">apply</span>(np.linalg.norm,axis <span class="op">=</span> <span class="dv">1</span>)) <span class="co"># element / rowwise norm equivalent</span></span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>df.assign(demeaned <span class="op">=</span> <span class="kw">lambda</span> df : df.price <span class="op">-</span> df.price.mean()) </span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="co">#if aggregation is based on grouping</span></span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>df_cut <span class="op">=</span> df.groupby(<span class="st">'cut'</span>)</span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>df.assign(demeaned <span class="op">=</span> df.price <span class="op">-</span> df_cut.price.transform(<span class="st">'mean'</span>)) <span class="co">#transform</span></span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="co"># map : Map values of Series according to an input mapping or function.</span></span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="co"># very similar to apply but acts on pd.Series rather than pd.DataFrame</span></span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>df.price.<span class="bu">map</span>(<span class="kw">lambda</span> r : r <span class="op">+</span> <span class="dv">1</span>) <span class="co">#returns a pd.Series</span></span>
-<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="co"># applymap: Apply a function to a DataDrame element-wise</span></span>
-<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>]).applymap(<span class="kw">lambda</span> x : x <span class="op">**</span><span class="dv">2</span>) </span>
-<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshaping data with melt</span></span>
-<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt converts data to long format. </span></span>
-<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a><span class="co"># pivot is the column equivalent to expand data wider</span></span>
-<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="co">''' some melt arguments are :</span></span>
-<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a><span class="co">id_vars ; Column(s) to use as identifier variables</span></span>
-<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="co">value_vars ; Column(s) to unpivot. If not specified, uses all columns that are not set as id_vars.</span></span>
-<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a><span class="co">var_name ; Name to use for the ‘variable’ column</span></span>
-<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a><span class="co">value_name ; Name to use for the ‘value’ column</span></span>
-<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
-<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>df_longer <span class="op">=</span> (df.<span class="bu">filter</span>([<span class="st">'cut'</span>,<span class="st">'carat'</span>,<span class="st">'clarity'</span>,<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>,<span class="st">'price'</span>])</span>
-<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    .melt(id_vars<span class="op">=</span>[<span class="st">'cut'</span>,<span class="st">'price'</span>,<span class="st">'clarity'</span>,<span class="st">'carat'</span>], </span>
-<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    value_vars <span class="op">=</span> [<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>],</span>
-<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    value_name <span class="op">=</span> <span class="st">"dim"</span></span>
-<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>     )</span>
-<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Longer format usually good for plotting.</span></span>
-<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>sns.relplot(x<span class="op">=</span><span class="st">"dim"</span>, y<span class="op">=</span><span class="st">"carat"</span>, hue<span class="op">=</span><span class="st">"cut"</span>, size<span class="op">=</span><span class="st">"price"</span>,</span>
-<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>            sizes<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">200</span>), alpha<span class="op">=</span><span class="fl">.5</span>, palette<span class="op">=</span><span class="st">"muted"</span>,</span>
-<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>            height<span class="op">=</span><span class="dv">6</span>, data<span class="op">=</span>df_longer.query(<span class="st">'dim &lt; 12'</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre><code>/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_3755/2303346034.py:63: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A whole bunch of stuff - recap on pandas</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect dataframe attributes -------------------------------- </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df.index <span class="co"># name of index, in this case a range</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>df.columns <span class="co"># variables carat to z</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>df.values <span class="co"># values as a numpy.ndarray</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>df.dtypes <span class="co"># data types of variables</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>df.shape <span class="co"># rows to column structure</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df.ndim <span class="co"># number of dimensions</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># filter or create columns ------------------------------------------------</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="st">'cut'</span>]) <span class="co"># returns pandas.DataFrame</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'cut'</span>] <span class="co"># as opposed to this which returns pandas.Series or df.cut</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="st">"carat"</span>,<span class="st">"cut"</span>]) <span class="co"># filter more than one variables </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>(regex<span class="op">=</span>  <span class="st">"^c"</span>) <span class="co"># with regular expressions</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">5</span>], axis<span class="op">=</span><span class="dv">0</span>).head() <span class="co"># filter rows keeping in mind the index</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>df.assign(size <span class="op">=</span> <span class="dv">1</span>) <span class="co">#fills same value</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.assign(size <span class="op">=</span> np.sqrt(df.x <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> df.y <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> df.z <span class="op">**</span> <span class="dv">2</span>)) <span class="co">#element wise vector addition</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># subset observations with query ---------------------------------------------------------------- </span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># The quotes in query need to be single-outside, double-inside </span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'color == "E"'</span>) <span class="co"># filter observations by criteria</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'cut == "Ideal" or cut == "Premium"'</span>) <span class="co"># filter observations with logical expression</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'cut == "Ideal" | cut == "Premium"'</span>)  <span class="co"># same thing</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">"cut.str.match('^G')"</span>) <span class="co"># query doesn't have regex parameter but can be incorporated via str attribute</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">"clarity.str.contains('^\w+1')"</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'price &gt; 500'</span>) <span class="co"># querying numeric</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># chaining manipulations</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'price &lt; 500'</span>).head() </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>(df</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>([<span class="st">'carat'</span>, <span class="st">'color'</span>])</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a> .query(<span class="st">'color == "E"'</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a> .head(<span class="dv">3</span>))</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Each column in the pd.Dataframe is pd.Series with methods available</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>df.cut    <span class="co"># referenced column on its own</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>df.cut.value_counts()   </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>df.cut.unique()</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>df.carat.mean()</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># groupby: splits DataFrame into multiple compartments and returns a group-by object</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co"># which aggregations can be applied on each group</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'cut'</span>).price.agg(<span class="st">'std'</span>)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'cut'</span>).mean(numeric_only<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co"># apply functions : apply a function to a DataFrame over columns (axis = 1) or rows (axis = 0) </span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>df.assign(norm <span class="op">=</span> df.<span class="bu">filter</span>([<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>]).<span class="bu">apply</span>(np.linalg.norm,axis <span class="op">=</span> <span class="dv">1</span>)) <span class="co"># element / rowwise norm equivalent</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co"># map : very similar to apply but acts on pd.Series rather than pd.DataFrame</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>df.price.<span class="bu">map</span>(<span class="kw">lambda</span> r : r <span class="op">+</span> <span class="dv">1</span>) <span class="co">#returns a pd.Series</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co"># applymap: Apply a function to a DataDrame element-wise</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">filter</span>([<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>]).applymap(<span class="kw">lambda</span> x : x <span class="op">**</span><span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_1074/1161367035.py:50: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
   df.groupby('cut').price.agg('std')
-/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_3755/2303346034.py:64: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_1074/1161367035.py:51: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
   df.groupby('cut').mean(numeric_only=True)
-/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_3755/2303346034.py:77: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
-  df_cut = df.groupby('cut')
-/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_3755/2303346034.py:86: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
+/var/folders/j2/6znnc26n7r9gk1qjgh7wy6bh0000gn/T/ipykernel_1074/1161367035.py:60: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
   df.filter(['x','y','z']).applymap(lambda x : x **2)</code></pre>
-<p><img src="01a-pandas_fundamentals_files/figure-html/cell-3-output-2.png" class="img-fluid"></p>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">x</th>
+<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">z</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>15.6025</td>
+<td>15.8404</td>
+<td>5.9049</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>15.1321</td>
+<td>14.7456</td>
+<td>5.3361</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>16.4025</td>
+<td>16.5649</td>
+<td>5.3361</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>17.6400</td>
+<td>17.8929</td>
+<td>6.9169</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>18.8356</td>
+<td>18.9225</td>
+<td>7.5625</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">53935</td>
+<td>33.0625</td>
+<td>33.1776</td>
+<td>12.2500</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">53936</td>
+<td>32.3761</td>
+<td>33.0625</td>
+<td>13.0321</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">53937</td>
+<td>32.0356</td>
+<td>32.2624</td>
+<td>12.6736</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">53938</td>
+<td>37.8225</td>
+<td>37.4544</td>
+<td>13.9876</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">53939</td>
+<td>33.9889</td>
+<td>34.4569</td>
+<td>13.2496</td>
+</tr>
+</tbody>
+</table>
+
+<p>53940 rows × 3 columns</p>
+</div>
+<p>Alot more functions available in <a href="https://pandas.pydata.org/docs/reference/index.html">Pandas API</a>. Arguably too many to remember the syntax in an intuitive way.</p>
+</section>
+<section id="typical-workflow---reading-manipulating-and-plotting" class="level3">
+<h3 class="anchored" data-anchor-id="typical-workflow---reading-manipulating-and-plotting">Typical workflow - Reading, Manipulating and Plotting</h3>
+<p>The below follows a generic workflow of reading and manipulation data for insight and visualisation. Note in each assignment calcuations are triggered. As data becomes larger this slows down computation (assuming the data fits in memory).</p>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#reading data</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'diamonds.csv'</span>) </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#subseting data</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>df_subset <span class="op">=</span> (df </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>             .<span class="bu">filter</span>([<span class="st">'cut'</span>,<span class="st">'carat'</span>,<span class="st">'clarity'</span>,<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>,<span class="st">'price'</span>])</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>             .query(<span class="st">'carat &lt; 2.5'</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#manipulating data for insight</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>premium_by_clarity <span class="op">=</span> (df.assign(demeaned <span class="op">=</span> df.price <span class="op">-</span> df.groupby(<span class="st">'cut'</span>).price.transform(<span class="st">'mean'</span>))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  .groupby(<span class="st">'clarity'</span>).price.mean()</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  .sort_values())</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>premium_by_clarity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>clarity
+VVS1    2523.114637
+IF      2864.839106
+VVS2    3283.737071
+VS1     3839.455391
+I1      3924.168691
+VS2     3924.989395
+SI1     3996.001148
+SI2     5063.028606
+Name: price, dtype: float64</code></pre>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualization</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_longer <span class="op">=</span> (df_subset </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .melt(id_vars<span class="op">=</span>[<span class="st">'cut'</span>,<span class="st">'price'</span>,<span class="st">'clarity'</span>,<span class="st">'carat'</span>], </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    value_vars <span class="op">=</span> [<span class="st">'x'</span>,<span class="st">'y'</span>,<span class="st">'z'</span>],</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    value_name <span class="op">=</span> <span class="st">"dim"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>     )</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>sns.relplot(x<span class="op">=</span><span class="st">"dim"</span>, y<span class="op">=</span><span class="st">"carat"</span>, hue<span class="op">=</span><span class="st">"cut"</span>, size<span class="op">=</span><span class="st">"price"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            sizes<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">200</span>), alpha<span class="op">=</span><span class="fl">.5</span>, palette<span class="op">=</span><span class="st">"muted"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            height<span class="op">=</span><span class="dv">6</span>, data<span class="op">=</span>df_longer.query(<span class="st">'dim &lt; 12'</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="01a-pandas_fundamentals_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </section>
 <section id="challenge" class="level3 challenge">
 <h3 class="anchored" data-anchor-id="challenge">Challenge</h3>
@@ -463,9 +535,9 @@ Common methods are:</p>
 Solution
 </summary>
 <p>This can be done in a few ways, but Seaborn interfaces with pandas-like dataframes seamlessly to make these simple data-manging tasks easy.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(x<span class="op">=</span><span class="st">"carat"</span>, y<span class="op">=</span><span class="st">"price"</span>, hue<span class="op">=</span><span class="st">"cut"</span>,size<span class="op">=</span><span class="st">'color'</span>,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>        sizes<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">200</span>), alpha<span class="op">=</span><span class="fl">.5</span>, palette<span class="op">=</span><span class="st">"muted"</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        height<span class="op">=</span><span class="dv">6</span>, data<span class="op">=</span>data.query(<span class="st">'clarity == "I1"'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(x<span class="op">=</span><span class="st">"carat"</span>, y<span class="op">=</span><span class="st">"price"</span>, hue<span class="op">=</span><span class="st">"cut"</span>,size<span class="op">=</span><span class="st">'color'</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>        sizes<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">200</span>), alpha<span class="op">=</span><span class="fl">.5</span>, palette<span class="op">=</span><span class="st">"muted"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        height<span class="op">=</span><span class="dv">6</span>, data<span class="op">=</span>data.query(<span class="st">'clarity == "I1"'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </section>
 <p>Some common issues with this typical workflow are:</p>
@@ -484,32 +556,32 @@ Solution
 <li><a href="https://python-course.eu/">https://python-course.eu/</a></li>
 <li><a href="https://realpython.com/fibonacci-sequence-python/">https://realpython.com/fibonacci-sequence-python/</a></li>
 </ul>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> FibonacciGenerator(n):</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" </span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    note: n is limit of fibonacci value rather than count</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> a <span class="op">&lt;</span> n:</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> a</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> b, a <span class="op">+</span> b</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> is_even(sequence):</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" reduces a sequence to even numbers</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> sequence:</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">yield</span> n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can consume generators by converting to list</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(is_even([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> FibonacciGenerator(n):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">    note: n is limit of fibonacci value rather than count</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> a <span class="op">&lt;</span> n:</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> a</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> b, a <span class="op">+</span> b</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> is_even(sequence):</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" reduces a sequence to even numbers</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> sequence:</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">yield</span> n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can consume generators by converting to list</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(is_even([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre><code>[2, 4]</code></pre>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(FibonacciGenerator(<span class="dv">500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(FibonacciGenerator(<span class="dv">500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre><code>[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]</code></pre>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build up sequences of manipulations in memory with generators </span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and selectively trigger consumption with "list" for efficiency. </span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conceptually this is using lazy functions which we will talk more about.</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(is_even(FibonacciGenerator(<span class="dv">500</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build up sequences of manipulations in memory with generators </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and selectively trigger consumption with "list" for efficiency. </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conceptually this is using lazy functions which we will talk more about.</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(is_even(FibonacciGenerator(<span class="dv">500</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre><code>[0, 2, 8, 34, 144]</code></pre>
 </section>
 <section id="key-points" class="level3 keypoints">
