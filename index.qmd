@@ -45,7 +45,7 @@ Our full CoC, with incident reporting guidelines, is available [here](https://sy
 
 ## Setup Instructions
 
-For local installation:
+**For local installation**:
 
 `git clone https://github.com/Sydney-Informatics-Hub/ParallelPython.git`
 
@@ -55,11 +55,11 @@ For local installation:
 
 `conda activate parallel`
 
-Google Colab:
+**Google Colab**:
 
-Alternatively, you can use Google co-lab, which requires you to sign into your google account. Go to https://colab.research.google.com/, and click "new notebook". colab is very similar to jupyter notebook except the compute is run on google cloud infrastructure. 
+Alternatively, you can use Google co-lab, which requires you to sign into your google account. Go to [Google Colab](https://colab.research.google.com/), and click "new notebook". Colab is very similar to jupyter notebook except the compute is run on google cloud infrastructure. 
 
-Most packages are by defualt installed. If a package is needed you can run the pip install with the "!" prefix. ie. `! pip install ucimlrepo`. 
+Most packages are by defualt installed. If a package is needed you can run the pip install with the "!" prefix. ie. `! pip install ucimlrepo`. This access the underlying terminal.
 
 
 
