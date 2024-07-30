@@ -31,6 +31,9 @@ jobs:
           tinytex: true 
           # r-version: 4.2.1
 
+      - name: Render Quarto Project
+        uses: quarto-dev/quarto-actions/render@v2
+
       - name: Publish to GitHub Pages (and render)
         uses: quarto-dev/quarto-actions/publish@v2
         with:
