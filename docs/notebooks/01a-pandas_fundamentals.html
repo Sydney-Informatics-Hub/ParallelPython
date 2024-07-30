@@ -139,12 +139,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Dask</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks/01c-Scientific_Computing.html" rel="" target="">
- <span class="menu-text">Scientific Computing</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../notebooks/01d-dask_delayed.html" rel="" target="">
- <span class="menu-text">Dask Delayed</span></a>
+ <span class="menu-text">Scientific Computing</span></a>
   </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
@@ -163,13 +159,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
-  <li><a href="#what-is-parallel---why-is-python-slow-sometimes" id="toc-what-is-parallel---why-is-python-slow-sometimes" class="nav-link" data-scroll-target="#what-is-parallel---why-is-python-slow-sometimes">What is Parallel - Why is python slow (sometimes)</a></li>
+  <li><a href="#background-what-is-parallel-python" id="toc-background-what-is-parallel-python" class="nav-link" data-scroll-target="#background-what-is-parallel-python">Background: What is Parallel Python?</a>
+  <ul class="collapse">
+  <li><a href="#modern-approaches-to-speed-up-code" id="toc-modern-approaches-to-speed-up-code" class="nav-link" data-scroll-target="#modern-approaches-to-speed-up-code">Modern approaches to speed up code</a></li>
+  <li><a href="#some-terminology-processes-threads-and-shared-memory" id="toc-some-terminology-processes-threads-and-shared-memory" class="nav-link" data-scroll-target="#some-terminology-processes-threads-and-shared-memory">Some terminology: Processes, threads and shared memory</a>
+  <ul class="collapse">
   <li><a href="#pandas-dataframes---recap-the-staple-of-python-data-manipulation" id="toc-pandas-dataframes---recap-the-staple-of-python-data-manipulation" class="nav-link" data-scroll-target="#pandas-dataframes---recap-the-staple-of-python-data-manipulation">Pandas Dataframes - Recap The Staple of Python data manipulation</a></li>
   <li><a href="#dataframe-functions" id="toc-dataframe-functions" class="nav-link" data-scroll-target="#dataframe-functions">DataFrame Functions</a></li>
   <li><a href="#typical-workflow---reading-manipulating-and-plotting" id="toc-typical-workflow---reading-manipulating-and-plotting" class="nav-link" data-scroll-target="#typical-workflow---reading-manipulating-and-plotting">Typical workflow - Reading, Manipulating and Plotting</a></li>
   <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge">Challenge</a></li>
   <li><a href="#aside---generators-may-be-helpful-for-functions-you-define-yourself" id="toc-aside---generators-may-be-helpful-for-functions-you-define-yourself" class="nav-link" data-scroll-target="#aside---generators-may-be-helpful-for-functions-you-define-yourself">Aside - Generators may be helpful for functions you define yourself</a></li>
   <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key points</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -201,19 +203,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>What does parallel mean?</li>
 </ul>
 </section>
-<section id="what-is-parallel---why-is-python-slow-sometimes" class="level3">
-<h3 class="anchored" data-anchor-id="what-is-parallel---why-is-python-slow-sometimes">What is Parallel - Why is python slow (sometimes)</h3>
-<p>A <strong>process</strong> is a collection of resources including program files and memory, that operates as an independent entity. Since each process has a seperate memory space, it can operate independently from other processes. It cannot easily access shared data in other processes.</p>
-<p>A <strong>thread</strong> is the unit of execution within a process. A process can have anywhere from just one thread to many threads. Threads are considered lightweight because they use far less resources than processes. Threads also share the same memory space so are not independent.</p>
-<p>Back to python, the multiprocessing library was designed to break down the <strong>Global Interpreter Lock (GIL</strong>) that limits one thread to control the Python interpreter.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../fig/process_v_thread.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Image</figcaption>
-</figure>
-</div>
-<p>In Python, the things that are occurring simultaneously are called by different names (thread, task, process). While they all fall under the definition of concurrency (multiple things happening anaologous to different trains of thought), only multiprocessing actually runs these trains of thought at literally the same time. We will only cover multiprocessing here which assists in CPU bound operations - but keep in mind other methods exist (multi threading, message passing interface..), whose implementation tends to be more low level.</p>
+<section id="background-what-is-parallel-python" class="level1">
+<h1>Background: What is Parallel Python?</h1>
+<p>Parallel computing is when many different tasks are carried out simultaneously. Python does this by creating independent processes that ship data, program files and libraries to an isolated ecosystem where computation is performed. There are three main models for parallel computing:</p>
+<ul>
+<li><p><strong>Embarrassingly parallel:</strong> the code does not need to synchronize/communicate with other instances, and you can run multiple instances of the code separately, and combine the results later. If you can do this, great! (array jobs, task queues)</p></li>
+<li><p><strong>Shared memory parallelism:</strong> Parallel threads need to communicate and do so via the same memory (variables, state, etc). (OpenMP)</p></li>
+<li><p><strong>Message passing:</strong> Different processes manage their own memory segments. They share data by communicating (passing messages) as needed. (Message Passing Interface (MPI)).</p></li>
+</ul>
+<section id="modern-approaches-to-speed-up-code" class="level3">
+<h3 class="anchored" data-anchor-id="modern-approaches-to-speed-up-code">Modern approaches to speed up code</h3>
+<p>Traditional implemententations of making code parallel are done on a low level.</p>
+<p>However, open source software has <strong><em>evolved</em></strong> dramatically over the last few years allowing more <strong><em>high level implementations and concise ‘pythonic’ syntax</em></strong> that wraps around low level tools. These modern tools also address the nature of why code takes long to run in the Big Data / Data Science world we live in, that is, function / compute-bound and data-bound bottlenecks,with a more accessible high level syntax.</p>
+<p><strong><em>The focus on this course is to use these modern high level implementations to address both Data and Function Bound bottlenecks.</em></strong></p>
 </section>
+<section id="some-terminology-processes-threads-and-shared-memory" class="level2">
+<h2 class="anchored" data-anchor-id="some-terminology-processes-threads-and-shared-memory">Some terminology: Processes, threads and shared memory</h2>
+<ul>
+<li><p>A <strong><em>process</em></strong> is a collection of resources including program files and memory that operates as an independent entity. Since each process has a seperate memory space, it can operate independently from other processes. It cannot easily access shared data in other processes.</p></li>
+<li><p>A <strong><em>thread</em></strong> is the unit of execution within a process. A process can have anywhere from just one thread to many threads. Threads are considered lightweight because they use far less resources than processes. Threads also share the same memory space so are not independent.</p></li>
+</ul>
+<figure class="figure">
+<img src="../fig/process_v_thread.png" style="margin:6px;width:300px" class="figure-img">
+</figure>
+<p><br></p>
+<figure class="figure">
+<img src="../fig/process_threads_comparison.png" style="margin:6px;width:400px" class="figure-img">
+</figure>
+<p><br></p>
+<p>The designers of the Python language made the choice that only one thread in a process can run actual Python code by using the so-called global interpreter lock (GIL).</p>
+<p>External libraries (NumPy, SciPy, Pandas, etc), written in C or other languages, can release the lock and run multi-threaded. Code writen in native Python has the GIL limitation.</p>
+<p>The <strong><em>multiprocessing library</em></strong> can be used to release the GIL on native Python code. However, modern packages such as Dask and Polars use it under the hood without specifying pools of resources to be used.</p>
 <section id="pandas-dataframes---recap-the-staple-of-python-data-manipulation" class="level3">
 <h3 class="anchored" data-anchor-id="pandas-dataframes---recap-the-staple-of-python-data-manipulation">Pandas Dataframes - Recap The Staple of Python data manipulation</h3>
 <p>Pandas has been the standard in Python for many years</p>
@@ -594,6 +614,8 @@ Solution
 </section>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

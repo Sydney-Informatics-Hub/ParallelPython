@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Parallel Python with Dask - What is Dask?</title>
+<title>Parallel Python with Dask - Dask</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -139,12 +139,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Dask</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks/01c-Scientific_Computing.html" rel="" target="">
- <span class="menu-text">Scientific Computing</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../notebooks/01d-dask_delayed.html" rel="" target="">
- <span class="menu-text">Dask Delayed</span></a>
+ <span class="menu-text">Scientific Computing</span></a>
   </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
@@ -183,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">What is Dask?</h1>
+<h1 class="title">Dask</h1>
 </div>
 
 
@@ -202,7 +198,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://docs.dask.org/en/stable/">Dask</a></li>
 <li><a href="https://docs.dask.org/en/stable/10-minutes-to-dask.html">10 minute intro</a></li>
 <li><a href="https://docs.dask.org/en/stable/dataframe-api.html">API Reference</a></li>
+<li><a href="https://examples.dask.org/">Examples</a></li>
 </ul>
+<p>Dask is a Python library for parallel and distributed computing. Dask offers an array of tools such as Dask DataFrames, Dask Bags, Dask Delayed Functions and has machine learning integrations. We will foucus with Dask DataFrames.</p>
 <p><strong>Dask dataframes process data in parallel across multiple cores or machines</strong>.</p>
 <p>Dask DataFrames coordinate many pandas DataFrames/Series arranged along the index.</p>
 <p>Dask DataFrame is partitioned row-wise, grouping rows by index value for efficiency. These pandas objects may live on disk or on other machines.</p>

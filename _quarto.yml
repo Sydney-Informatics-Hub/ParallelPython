@@ -18,8 +18,6 @@ website:
       - text: "Dask"
         href: notebooks/01b-TransitionToDask.html
       - text: "Scientific Computing"
-        href: notebooks/01c-Scientific_Computing.html
-      - text: "Dask Delayed"
         href: notebooks/01d-dask_delayed.html
 
           

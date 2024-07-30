@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Parallel Python with Dask - Background: What is Parallel Python?</title>
+<title>Parallel Python with Dask - Dask Delayed versus Multiprocessing</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -136,12 +136,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Dask</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks/01c-Scientific_Computing.html" rel="" target="">
- <span class="menu-text">Scientific Computing</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../notebooks/01d-dask_delayed.html" rel="" target="">
- <span class="menu-text">Dask Delayed</span></a>
+ <span class="menu-text">Scientific Computing</span></a>
   </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
@@ -159,14 +155,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#modern-approaches-to-speed-up-code" id="toc-modern-approaches-to-speed-up-code" class="nav-link active" data-scroll-target="#modern-approaches-to-speed-up-code">Modern approaches to speed up code</a></li>
-  <li><a href="#some-terminology-processes-threads-and-shared-memory" id="toc-some-terminology-processes-threads-and-shared-memory" class="nav-link" data-scroll-target="#some-terminology-processes-threads-and-shared-memory">Some terminology: Processes, threads and shared memory</a>
-  <ul class="collapse">
-  <li><a href="#speed-up-a-function-that-could-take-a-while-to-run" id="toc-speed-up-a-function-that-could-take-a-while-to-run" class="nav-link" data-scroll-target="#speed-up-a-function-that-could-take-a-while-to-run">Speed up a function that could take a while to run</a></li>
+  <li><a href="#speed-up-a-function-that-could-take-a-while-to-run" id="toc-speed-up-a-function-that-could-take-a-while-to-run" class="nav-link active" data-scroll-target="#speed-up-a-function-that-could-take-a-while-to-run">Speed up a function that could take a while to run</a></li>
   <li><a href="#we-will-come-back-to-the-below-alternative-dask-afterwards" id="toc-we-will-come-back-to-the-below-alternative-dask-afterwards" class="nav-link" data-scroll-target="#we-will-come-back-to-the-below-alternative-dask-afterwards">We will come back to the below alternative (Dask) afterwards</a></li>
   <li><a href="#compare-multiprocessing-to-dask" id="toc-compare-multiprocessing-to-dask" class="nav-link" data-scroll-target="#compare-multiprocessing-to-dask">Compare Multiprocessing to Dask</a></li>
   <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key points</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -175,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Background: What is Parallel Python?</h1>
+<h1 class="title">Dask Delayed versus Multiprocessing</h1>
 </div>
 
 
@@ -190,35 +182,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Parallel computing is when many different tasks are carried out simultaneously. Python does this by creating independent processes that ship data, program files and libraries to an isolated ecosystem where computation is performed. There are three main models for parallel computing:</p>
-<ul>
-<li><p><strong>Embarrassingly parallel:</strong> the code does not need to synchronize/communicate with other instances, and you can run multiple instances of the code separately, and combine the results later. If you can do this, great! (array jobs, task queues)</p></li>
-<li><p><strong>Shared memory parallelism:</strong> Parallel threads need to communicate and do so via the same memory (variables, state, etc). (OpenMP)</p></li>
-<li><p><strong>Message passing:</strong> Different processes manage their own memory segments. They share data by communicating (passing messages) as needed. (Message Passing Interface (MPI)).</p></li>
-</ul>
-<section id="modern-approaches-to-speed-up-code" class="level3">
-<h3 class="anchored" data-anchor-id="modern-approaches-to-speed-up-code">Modern approaches to speed up code</h3>
-<p>Traditional implemententations of making code parallel are done on a low level.</p>
-<p>However, open source software has <strong><em>evolved</em></strong> dramatically over the last few years allowing more <strong><em>high level implementations and concise ‘pythonic’ syntax</em></strong> that wraps around low level tools. These modern tools also address the nature of why code takes long to run in the Big Data / Data Science world we live in. These are the reasons why code being slow to run has changed from being the result of function-bound bottlenecks to data-bound bottlenecks.</p>
-<p><strong><em>The focus on this course is to use these modern high level implementations to address both Data and Function Bound bottlenecks.</em></strong></p>
-</section>
-<section id="some-terminology-processes-threads-and-shared-memory" class="level2">
-<h2 class="anchored" data-anchor-id="some-terminology-processes-threads-and-shared-memory">Some terminology: Processes, threads and shared memory</h2>
-<ul>
-<li><p>A <strong><em>process</em></strong> is a collection of resources including program files and memory that operates as an independent entity. Since each process has a seperate memory space, it can operate independently from other processes. It cannot easily access shared data in other processes.</p></li>
-<li><p>A <strong><em>thread</em></strong> is the unit of execution within a process. A process can have anywhere from just one thread to many threads. Threads are considered lightweight because they use far less resources than processes. Threads also share the same memory space so are not independent.</p></li>
-</ul>
-<figure class="figure">
-<img src="../fig/process_v_thread.png" style="margin:6px;width:300px" class="figure-img">
-</figure>
-<p><br></p>
-<figure class="figure">
-<img src="../fig/process_threads_comparison.png" style="margin:6px;width:400px" class="figure-img">
-</figure>
-<p><br></p>
-<p>The designers of the Python language made the choice that only one thread in a process can run actual Python code by using the so-called global interpreter lock (GIL).</p>
-<p>External libraries (NumPy, SciPy, Pandas, etc), written in C or other languages, can release the lock and run multi-threaded. Code writen in native Python has the GIL limitation.</p>
-<p>The <strong><em>multiprocessing library</em></strong> can be used to release the GIL on native Python code.</p>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.distributed <span class="im">as</span> dd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
@@ -609,7 +572,6 @@ KeyboardInterrupt</code></pre>
 </section>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
