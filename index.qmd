@@ -12,7 +12,7 @@ This course is aimed at researchers, students, and industry professionals who wa
 
 ## Trainers
 * Kristian Maras (Kris) (MSc Mathematics / Ba Commerce) 
-* Thomas Mauch (Thomas) (PhD in astronomy)
+* Thomas Mauch (Tom) (PhD in astronomy)
 * Nathaniel (Nate) Butterworth (PhD Computational Geophysics)
 
 
