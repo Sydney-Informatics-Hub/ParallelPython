@@ -9,7 +9,7 @@ output:
 
 # Go to [Google Colab](https://colab.research.google.com/)
 
-Sign in to google if you are not already. Launch "File > New Notebook in Drive". 
+Sign in to [Google Colab](https://colab.research.google.com/) if you are not already. Launch "File > New Notebook in Drive". 
 
 Done. 
 
