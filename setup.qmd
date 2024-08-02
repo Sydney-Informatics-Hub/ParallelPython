@@ -9,8 +9,11 @@ output:
 
 # Go to [Google Colab](https://colab.research.google.com/)
 
-Sign in to google if you are not already. Launch "File > New Notebook in Drive". 
-Done. If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.
+Sign in to [Google Colab](https://colab.research.google.com/) if you are not already. Launch "File > New Notebook in Drive". 
+
+Done. 
+
+If you would prefer to have a local version of the Python environment we are using, see below for setup instructions.
 
 
 # At home setup
@@ -39,6 +42,7 @@ python=3.9.13
 scikit-learn=1.1.2
 scipy=1.9.3
 seaborn=0.12.1
+polars=1.3.0
 ```
 
 Other combinations may also work.
